@@ -47,6 +47,31 @@ configuración. Nada de multi-hotel todavía, que sería sobreingeniería.
 **Costo aceptado**: algo más de trabajo inicial.
 **Se revisa si**: aparece un segundo hotel de verdad.
 
+## 2026-09 — Python para el código propio
+
+**Contexto**: dos piezas van fuera de los nodos de n8n como código propio y probado:
+el buscador de huecos y la máquina de estados.
+**Alternativas**: Node, que es el lenguaje de n8n y el del bot de disponibilidad que
+figura en `references.md` como reutilizable.
+**Elegido**: Python. El precedente propio pesa más: `hotel-bot-mvp` ya resuelve una
+máquina de estados en cuarenta y cuatro líneas de diccionarios y tiene una batería de
+tests con pytest. Se copia un patrón ya probado en vez de inventar uno.
+**Costo aceptado**: el bot de disponibilidad hay que portarlo, no copiarlo. Igual había
+que corregirle dos cosas al portarlo, así que se reescribe de todos modos.
+**Se revisa si**: aparece la necesidad de correr estas piezas dentro de un nodo de n8n.
+
+## 2026-09 — La configuración de la casa en YAML, un solo archivo
+
+**Contexto**: la regla es que el sistema se pueda montar en otra casa cambiando un
+archivo. Tratamientos, duraciones, salas, márgenes, textos e idiomas van ahí.
+**Alternativas**: TOML y JSON, que Python lee sin instalar nada. JSON además es lo que
+habla n8n.
+**Elegido**: YAML, en `config/casa.yaml`. Es el único de los tres que una persona no
+programadora puede editar sin romperlo: admite comentarios y no lleva llaves ni comillas.
+Quien va a mantener el catálogo de tratamientos es Egi, no un programador.
+**Costo aceptado**: una dependencia (PyYAML), y que la sangría importa.
+**Se revisa si**: el archivo deja de editarse a mano y pasa a generarse desde otro lado.
+
 ---
 
 <!-- Decisiones nuevas al final -->

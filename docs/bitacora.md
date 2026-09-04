@@ -7,6 +7,27 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-04 — Fase 1, paso 1 (parcial): esqueleto del repositorio
+
+**Qué se hizo.** El proyecto se sacó de la carpeta de descargas y quedó como
+repositorio propio en `~/cal-reiet-spa`. Se montó el esqueleto de carpetas para
+empezar a programar: el archivo de configuración de la casa, el lugar de las dos
+piezas de código propio, y la batería de pruebas funcionando en vacío. Se eligió
+Python y YAML. El catálogo de tratamientos quedó marcado como pendiente de Egi.
+
+**Estado.** Terminado el esqueleto. El paso 1 NO está cerrado: falta n8n corriendo,
+la cuenta de Google de pruebas, los tres calendarios, la hoja y el bot de Telegram.
+
+**Decisiones.** Python por el precedente de `hotel-bot-mvp`; YAML para que la
+configuración la pueda editar alguien que no programa. Ver `decisions.md`.
+
+**Se rompió algo.** No.
+
+**Próximo paso.** Montar el entorno de laboratorio: cuenta de Google de pruebas y
+n8n corriendo.
+
+---
+
 ## 2026-09-04 — Fase 0, entendimiento
 
 **Qué se hizo.** Se mapeó el circuito completo de reserva tal como funciona hoy, con

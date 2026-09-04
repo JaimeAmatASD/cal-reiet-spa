@@ -1,0 +1,50 @@
+# Todo lo propio de Cal Reiet vive acá. NADA de esto va escrito dentro del código.
+# Para montar el sistema en otra casa se cambia este archivo y nada más.
+#
+# Se puede editar sin saber programar. Respetá la sangría (los espacios del
+# principio de cada línea): en este formato la sangría es lo que marca qué
+# pertenece a qué. Todo lo que va después de un # es un comentario y se ignora.
+
+casa: Cal Reiet
+
+# --- Reglas de tiempo -------------------------------------------------------
+
+# Minutos libres a cada lado de un tratamiento. Regla de la casa: 15.
+# (El bot viejo usaba 90 y por eso no se puede portar tal cual.)
+margen_minutos: 15
+
+# Horas que se aguanta una reserva sin pago antes de soltarla.
+plazo_sin_pago_horas: 12
+
+# --- Salas ------------------------------------------------------------------
+# Una sala = un calendario de Google. El id de cada calendario va en .env,
+# nunca acá: este archivo se commitea.
+
+salas:
+  - id: sala_1
+    nombre: Sala 1
+  - id: sala_2
+    nombre: Sala 2
+
+# --- Tratamientos -----------------------------------------------------------
+# El catálogo real de la operación, que es más largo que el de la web.
+# duraciones: en minutos, las que se pueden reservar de ese tratamiento.
+
+tratamientos: []
+  # completar con Egi. Formato:
+  # - id: masaje_relax
+  #   nombre: Masaje relajante
+  #   duraciones: [30, 60, 90]
+  #   salas: [sala_1, sala_2]      # dónde se puede dar
+
+# --- Idiomas ----------------------------------------------------------------
+
+idiomas: []
+  # completar: en qué idiomas se le escribe al cliente
+
+# --- Textos -----------------------------------------------------------------
+# Los mensajes que se le mandan al cliente y al grupo de terapeutas.
+# Van acá y no en el código para poder cambiarlos sin tocar nada.
+
+textos: {}
+  # completar: se define en la fase 2 (acuse del formulario) y la fase 5 (Telegram)

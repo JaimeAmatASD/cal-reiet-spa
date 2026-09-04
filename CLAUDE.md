@@ -26,8 +26,15 @@ James dirige este proyecto pero no lee código. No se lo mandes.
 ## Comandos
 
 ```bash
-# completar cuando exista código
+source .venv/bin/activate   # el entorno del proyecto, siempre primero
+pytest                      # todos los tests
+
+# solo la primera vez, o al clonar el repo en otra máquina:
+python3 -m venv .venv && .venv/bin/pip install PyYAML pytest
 ```
+
+Python. El código propio vive en `src/`, la configuración de la casa en
+`config/casa.yaml`. Convenciones de tests: `.claude/rules/tests.md`.
 
 ## Stack
 
