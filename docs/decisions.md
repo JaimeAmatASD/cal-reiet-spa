@@ -84,13 +84,29 @@ CONFIRMADA. En la fase 1 es una casilla de la hoja; en la fase 5 es un botón.
 **Costo aceptado**: si nadie marca la casilla, la reserva no se confirma. Es un paso
 manual que se puede olvidar, y es deliberado: preferimos que se frene antes que
 confirmar algo sin cobrar.
-**Consecuencia que hay que construir sí o sí**: esto genera reservas esperando pago,
-con el plazo de doce horas ya definido en `config/casa.yaml`. Si no se construye la
-pieza que las suelta al vencer, el sistema va a rechazar trabajo real por huecos
-ocupados por reservas fantasma, y va a fallar en silencio. Ya pasó dos veces: en el
-bot de disponibilidad y hoy a mano en el calendario del hotel. Ver `lessons.md`.
+**Consecuencia que hay que construir sí o sí**: esto genera reservas esperando pago.
+El sistema no las suelta — ver la decisión siguiente — pero sí tiene que mostrarlas.
+Si nadie las ve, el spa termina rechazando trabajo real por huecos ocupados por
+reservas fantasma, y falla en silencio. Ya pasó dos veces: en el bot de disponibilidad
+y hoy a mano en el calendario del hotel. Ver `lessons.md`.
 **Se revisa si**: el hotel adopta un cobro en línea del que el sistema pueda enterarse
 sin intervención.
+
+## 2026-09 — El sistema avisa de las reservas impagas, pero no las suelta
+
+**Contexto**: para liberar el hueco hacía falta saber cuándo vence una reserva sin pagar.
+La documentación hablaba de un plazo de doce horas como si fuera una regla.
+**Alternativas**: un plazo fijo tras el cual el sistema suelta solo; o un plazo variable
+según cuánto falte para el tratamiento, si el cliente está alojado, o la temporada.
+**Elegido**: ninguna regla automática, porque no existe. Lo decide Egi caso por caso.
+El sistema cuenta las horas configuradas y muestra la reserva en una lista de avisos.
+Soltarla es siempre una acción humana.
+**Costo aceptado**: un hueco puede quedar bloqueado indefinidamente si nadie mira la
+lista. Se acepta porque el criterio real depende de cosas que el sistema no ve.
+**Consecuencia**: la lista de reservas esperando cobro deja de ser un extra y pasa a ser
+obligatoria. Es lo único que separa este diseño del fallo silencioso de `lessons.md`.
+**Se revisa si**: aparece un criterio que Egi termine aplicando siempre igual. Entonces
+sí se puede automatizar, y recién ahí.
 
 ---
 

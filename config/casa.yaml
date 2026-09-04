@@ -13,8 +13,10 @@ casa: Cal Reiet
 # (El bot viejo usaba 90 y por eso no se puede portar tal cual.)
 margen_minutos: 15
 
-# Horas que se aguanta una reserva sin pago antes de soltarla.
-plazo_sin_pago_horas: 12
+# Horas sin cobrar tras las cuales la reserva aparece en la lista de avisos.
+# NO se suelta sola: soltarla la decide Egi caso por caso. Esto es un aviso,
+# no un vencimiento. Ver docs/decisions.md.
+aviso_sin_pago_horas: 12
 
 # --- Salas ------------------------------------------------------------------
 # Una sala = un calendario de Google. El id de cada calendario va en .env,
