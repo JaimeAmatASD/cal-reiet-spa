@@ -72,6 +72,26 @@ Quien va a mantener el catálogo de tratamientos es Egi, no un programador.
 **Costo aceptado**: una dependencia (PyYAML), y que la sangría importa.
 **Se revisa si**: el archivo deja de editarse a mano y pasa a generarse desde otro lado.
 
+## 2026-09 — El cobro se marca a mano y es lo que habilita la confirmación
+
+**Contexto**: faltaba definir qué separa una reserva ASIGNADA de una CONFIRMADA. El
+glosario ya decía que no son lo mismo, pero no decía qué las separa.
+**Alternativas**: automatizar el cobro, o integrarse con lo que use el hotel para
+facturar.
+**Elegido**: ninguna de las dos. El sistema no toca dinero ni se entera de si se pagó.
+Alguien marca «cobrado» a mano, y esa marca es la única que destraba el paso a
+CONFIRMADA. En la fase 1 es una casilla de la hoja; en la fase 5 es un botón.
+**Costo aceptado**: si nadie marca la casilla, la reserva no se confirma. Es un paso
+manual que se puede olvidar, y es deliberado: preferimos que se frene antes que
+confirmar algo sin cobrar.
+**Consecuencia que hay que construir sí o sí**: esto genera reservas esperando pago,
+con el plazo de doce horas ya definido en `config/casa.yaml`. Si no se construye la
+pieza que las suelta al vencer, el sistema va a rechazar trabajo real por huecos
+ocupados por reservas fantasma, y va a fallar en silencio. Ya pasó dos veces: en el
+bot de disponibilidad y hoy a mano en el calendario del hotel. Ver `lessons.md`.
+**Se revisa si**: el hotel adopta un cobro en línea del que el sistema pueda enterarse
+sin intervención.
+
 ---
 
 <!-- Decisiones nuevas al final -->
