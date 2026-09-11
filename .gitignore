@@ -5,6 +5,11 @@
 credentials.json
 token.json
 service-account*.json
+client_secret*.json
+
+# Material sensible: claves de Google, contraseñas, cualquier cosa que
+# identifique una cuenta. Nada de acá entra al repositorio.
+Secret/
 CLAUDE.local.md
 node_modules/
 __pycache__/
