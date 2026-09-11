@@ -1,0 +1,36 @@
+# Catálogo de tratamientos de la casa.
+#
+# ############################################################################
+# ESTO ES PROVISIONAL. NO ES EL CATÁLOGO REAL.
+#
+# Es un mínimo para poder trabajar mientras Egi arma el definitivo, que es
+# más largo que el que está publicado en la web. Hoy el sistema no distingue
+# tipos de tratamiento: todo entra como "masaje".
+#
+# Faltan dos cosas y ninguna se inventa:
+#   1. El catálogo real, con todos los tratamientos.
+#   2. Los precios. El hueco está marcado abajo y está vacío a propósito.
+#      Mientras esté vacío, el correo al cliente ofrece las duraciones SIN
+#      precio. En cuanto se escriba una cifra acá, empieza a aparecer sola.
+# ############################################################################
+#
+# Se puede editar sin saber programar. Respetá la sangría (los espacios del
+# principio de cada línea). Todo lo que va después de un # es un comentario.
+
+estado_catalogo: provisional
+
+tratamientos:
+  - id: masaje
+    nombre:
+      es: Masaje
+      en: Massage
+    # Las duraciones que se pueden reservar, en minutos, con su precio.
+    duraciones:
+      - minutos: 40
+        precio_eur:      # completar - Egi
+      - minutos: 60
+        precio_eur:      # completar - Egi
+      - minutos: 90
+        precio_eur:      # completar - Egi
+    # En qué salas se puede dar. Los ids salen de casa.yaml.
+    salas: [sala_1, sala_2]

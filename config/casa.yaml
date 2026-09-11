@@ -13,6 +13,34 @@ casa: Cal Reiet
 # (El bot viejo usaba 90 y por eso no se puede portar tal cual.)
 margen_minutos: 15
 
+# A qué hora abren y cierran las salas. Marca dónde empieza y termina el día
+# para buscar huecos: fuera de esto no se ofrece nada.
+#
+# PROVISIONAL - pendiente de que lo confirme Egi. Estos valores están deducidos
+# de dos días de mensajes reales: el tratamiento más temprano empezaba a las
+# 10:00 y el más tardío terminaba a las 17:30.
+#
+# Las horas van SIEMPRE entre comillas. Sin comillas, este formato lee 10:00
+# como el número 600 y el sistema no arranca.
+
+horario:
+  abre: "10:00"
+  cierra: "19:00"
+
+# Las franjas del día que el cliente puede pedir. No hace falta que diga una
+# hora exacta: con la franja alcanza para buscar hueco, y elegir la hora dentro
+# de la franja es de una persona.
+#
+# PROVISIONAL - dónde corta la mañana lo tiene que confirmar Egi.
+
+franjas:
+  mañana:
+    desde: "10:00"
+    hasta: "14:00"
+  tarde:
+    desde: "14:00"
+    hasta: "19:00"
+
 # Horas sin cobrar tras las cuales la reserva aparece en la lista de avisos.
 # NO se suelta sola: soltarla la decide Egi caso por caso. Esto es un aviso,
 # no un vencimiento. Ver docs/decisions.md.
@@ -29,24 +57,156 @@ salas:
     nombre: Sala 2
 
 # --- Tratamientos -----------------------------------------------------------
-# El catálogo real de la operación, que es más largo que el de la web.
-# duraciones: en minutos, las que se pueden reservar de ese tratamiento.
-
-tratamientos: []
-  # completar con Egi. Formato:
-  # - id: masaje_relax
-  #   nombre: Masaje relajante
-  #   duraciones: [30, 60, 90]
-  #   salas: [sala_1, sala_2]      # dónde se puede dar
+# El catálogo vive en su propio archivo: config/tratamientos.yaml.
+# Está aparte porque es lo que más se toca y lo que mantiene Egi: así puede
+# editarlo sin pasar por delante del resto de la configuración de la casa.
+# El sistema junta los dos archivos al arrancar.
 
 # --- Idiomas ----------------------------------------------------------------
+# En qué idiomas se le escribe al cliente. Se le contesta en el idioma en que
+# escribió. Si llega uno que no está en esta lista, la ficha sale igual pero
+# el borrador queda sin redactar, para que lo escriba una persona.
+#
+# Para sumar un idioma: agregarlo acá y agregar su bloque en textos.borrador.
+# No hay que tocar nada más.
 
-idiomas: []
-  # completar: en qué idiomas se le escribe al cliente
+idiomas: [es, en]
+
+# --- Señales de salud -------------------------------------------------------
+# Red de seguridad. Si alguna de estas palabras aparece en el correo, la
+# consulta se deriva a una persona y NO se guarda el texto en ningún sitio:
+# son datos de salud, de categoría especial bajo el RGPD.
+#
+# La lista se queda corta a propósito y no pretende acertar siempre: prefiere
+# derivar de más antes que guardar algo que no se puede guardar. Ampliala sin
+# miedo, el costo de una palabra de más es que un correo lo mire una persona.
+
+senales_salud:
+  es: [embarazo, embarazada, lesión, lesion, hernia, operación, operacion,
+       cirugía, cirugia, contractura, fibromialgia, cáncer, cancer, tumor,
+       diagnóstico, diagnostico, tratamiento médico, tratamiento medico,
+       medicación, medicacion, fisioterapeuta, prótesis, protesis, alergia,
+       tensión alta, tension alta, trombosis, quimioterapia]
+  en: [pregnant, pregnancy, injury, injured, hernia, surgery, operation,
+       cancer, tumour, tumor, diagnosis, medication, physiotherapist,
+       prosthesis, allergy, blood pressure, thrombosis, chemotherapy,
+       fibromyalgia, slipped disc]
 
 # --- Textos -----------------------------------------------------------------
-# Los mensajes que se le mandan al cliente y al grupo de terapeutas.
-# Van acá y no en el código para poder cambiarlos sin tocar nada.
+# Los mensajes que se le mandan al cliente. Van acá y no en el código para
+# poder cambiarlos sin tocar nada. Lo que va entre llaves lo rellena el
+# sistema: {nombre}, {fecha}, {minutos}, {precio}.
+#
+# Ojo: el sistema REDACTA, no envía. Todo esto sale como borrador y lo revisa
+# una persona antes de que salga.
 
-textos: {}
-  # completar: se define en la fase 2 (acuse del formulario) y la fase 5 (Telegram)
+textos:
+  # Lo que queda anotado cuando entra una consulta con datos de salud. Es lo
+  # único que se guarda de ese correo: ni el nombre, ni la dirección, ni el
+  # texto. Quien lo atienda lo busca en el buzón por el número de hilo.
+  aviso_salud: >-
+    Consulta con datos de salud. No se guarda el contenido. La atiende una
+    persona.
+
+  borrador:
+    es:
+      asunto: "Re: {asunto}"
+      saludo: "Hola {nombre},"
+      intro: >-
+        Gracias por escribirnos. Para poder buscarte hueco nos faltan un par
+        de datos:
+      intro_completo: >-
+        Gracias por escribirnos. Lo tenemos todo para buscarte hueco.
+      pregunta_duracion: "¿Cuánto quieres que dure el masaje?"
+      opcion_duracion: "  - {minutos} minutos"
+      opcion_duracion_precio: "  - {minutos} minutos - {precio} €"
+      pregunta_fecha: "¿Qué día te viene bien?"
+      pregunta_franja: "¿Lo prefieres por la mañana o por la tarde?"
+      pregunta_personas: "¿Para cuántas personas sería?"
+      intro_confirmar: "Y confírmanos, por si lo hemos entendido mal:"
+      intro_confirmar_solo: "Antes de buscarte hueco, confírmanos una cosa:"
+      # Cómo se le escribe una fecha al cliente. Un correo que dice
+      # "2026-09-12" parece escrito por una máquina, y lo está.
+      formato_fecha: "{dia} de {mes}"
+      meses: [enero, febrero, marzo, abril, mayo, junio, julio, agosto,
+              septiembre, octubre, noviembre, diciembre]
+      linea_confirmar: "  - {etiqueta}: {valor}"
+      etiquetas:
+        duracion: "la duración"
+        fecha: "el día"
+        franja: "la franja"
+        personas: "el número de personas"
+      disponibilidad: "Para el {fecha} tenemos libre:"
+      disponibilidad_pendiente: "  [COMPLETAR A MANO: huecos libres del {fecha}]"
+      despedida: "Un saludo,"
+      firma: "Equipo de Wellbeing - Cal Reiet"
+    en:
+      asunto: "Re: {asunto}"
+      saludo: "Hello {nombre},"
+      intro: >-
+        Thank you for writing to us. To find you a slot we still need a
+        couple of details:
+      intro_completo: >-
+        Thank you for writing to us. We have everything we need to find you a slot.
+      pregunta_duracion: "How long would you like the massage to be?"
+      opcion_duracion: "  - {minutos} minutes"
+      opcion_duracion_precio: "  - {minutos} minutes - {precio} €"
+      pregunta_fecha: "Which day suits you best?"
+      pregunta_franja: "Would you prefer morning or afternoon?"
+      pregunta_personas: "How many people would it be for?"
+      intro_confirmar: "And please confirm, in case we got it wrong:"
+      intro_confirmar_solo: "Before we look for a slot, please confirm one thing:"
+      formato_fecha: "{dia} {mes}"
+      meses: [January, February, March, April, May, June, July, August,
+              September, October, November, December]
+      linea_confirmar: "  - {etiqueta}: {valor}"
+      etiquetas:
+        duracion: "duration"
+        fecha: "day"
+        franja: "time of day"
+        personas: "number of people"
+      disponibilidad: "On {fecha} we have available:"
+      disponibilidad_pendiente: "  [FILL IN BY HAND: free slots on {fecha}]"
+      despedida: "Kind regards,"
+      firma: "Wellbeing Team - Cal Reiet"
+
+  # --- La petición al grupo de terapeutas -----------------------------------
+  # ESTO NO ES UN CORREO AL CLIENTE. Es el mensaje interno que hoy Egi escribe
+  # a mano en el grupo, y está copiado letra por letra de los mensajes reales.
+  #
+  # No le cambies la forma por gusto: el equipo lee estos bloques de un vistazo
+  # y el mismo bloque se repite tres veces —petición, «puedo», confirmación—
+  # que es lo que permite seguir un pedido dentro de un hilo de cien mensajes.
+  # Todo el detalle está en docs/convenciones.md.
+
+  peticion:
+    # En qué idioma sale el nombre del tratamiento. El canal interno va en
+    # inglés aunque al cliente se le escriba en su idioma.
+    idioma: en
+
+    # PROVISIONAL - falta saber qué decide que diga «A Espera de pago» o no.
+    # Hasta que exista la marca de cobrado, sale siempre igual.
+    encabezado: "PETICIÓN A Espera de pago"
+
+    # Solo sale si el cliente pidió preferencia. Si no dijo nada, esta línea no
+    # existe y no se le pregunta. Las opciones de acá son las únicas que el
+    # sistema reconoce: lo que no esté en esta lista se descarta.
+    preferencia:
+      mujer: "Terapeuta Mujer"
+      hombre: "Terapeuta Hombre"
+
+    # OJO: lo que va detrás de los minutos es un acento grave (`), no una
+    # comilla normal. En el parte del día se usa OTRA comilla distinta. A la
+    # vista son iguales y no lo son.
+    tratamiento: "{tratamiento} {minutos}`"
+
+    # El cliente alojado va con su habitación; el externo, con (Ext).
+    cliente_alojado: "{nombre} #{habitacion}"
+    cliente_externo: "{nombre} (Ext)"
+
+    # El separador entre la fecha y la hora es el punto medio (⋅), y el guión
+    # entre las horas es largo (–). Los dos están copiados del mensaje real.
+    fecha: "{dia_semana}, {dia} {mes}⋅{desde} – {hasta}"
+    dias_semana: [Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday]
+    meses: [January, February, March, April, May, June, July, August,
+            September, October, November, December]
