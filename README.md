@@ -64,6 +64,20 @@ solo en vez de que lo mate el sistema.
 
 Mientras n8n corra en esta máquina, el sistema solo mide con la máquina encendida.
 
+### El permiso de Google
+
+n8n entra al buzón del laboratorio con un permiso de Google que está montado desde el
+11 de septiembre de 2026. Dónde vive cada cosa:
+
+- El proyecto se llama `cal-reiet-lab`, en la cuenta del laboratorio.
+- La clave está **solo** dentro de n8n, en su almacén cifrado. No está en el
+  repositorio y no tiene que estarlo.
+- Por ahora el permiso es **solo de lectura del correo**. Ni enviar, ni borrar, ni
+  modificar: el sistema redacta borradores y no envía.
+
+Si alguna vez hay que rehacerlo, la dirección de retorno es exactamente
+`http://localhost:5678/rest/oauth2-credential/callback`.
+
 ## Entorno de laboratorio
 
 Todo el desarrollo ocurre contra una cuenta de Google de prueba, separada de las
