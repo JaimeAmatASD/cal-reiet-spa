@@ -7,6 +7,47 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-11 — n8n ya entra al buzón del laboratorio
+
+**Qué se hizo.** James montó el permiso de Google para la cuenta del laboratorio y lo
+enchufó a n8n. Con eso quedó comprobado lo que hacía falta comprobar: **n8n lee el buzón
+del laboratorio**. Sacó un correo de prueba de verdad, no simulado.
+
+De paso quedaron habilitados los tres servicios que el proyecto va a usar —correo, hoja
+y calendario— aunque por ahora solo se pide permiso para **leer** el correo. Ni enviar,
+ni borrar, ni modificar. El sistema redacta y no envía, así que no hace falta más.
+
+Hubo un tropiezo: Google devolvía «acceso denegado» porque la aplicación estaba en modo
+prueba y no tenía ni un usuario de prueba dado de alta. Se agregó la cuenta del
+laboratorio y funcionó.
+
+**Estado.** El permiso funciona y el correo entra. El primer flujo todavía no está
+guardado ni probado con un correo nuevo de verdad.
+
+**Decisiones.** Una, en `decisions.md`: Gemini como modelo que lee el correo, por
+precio. El contrato de lo que tiene que devolver no cambia.
+
+**Se rompió algo.** No.
+
+**Lo que hay que arreglar antes de seguir, y por qué.**
+
+1. **La aplicación está en modo prueba y Google corta el permiso cada siete días.** La
+   fase 1 existe para medir semanas seguidas. Tal como está, el lunes siguiente el
+   sistema aparece muerto sin que nadie haya tocado nada. Hay que pasarla a producción.
+2. **El sistema recibe un mensaje, y necesita la conversación entera.** La regla del
+   proyecto es leer el hilo completo, porque el cliente da la duración tres correos
+   atrás y no la repite. Falta el paso que pide la conversación completa antes de
+   mandársela al modelo.
+3. **Falta nuestro código en el medio.** El dibujo del flujo va del modelo a la hoja
+   directo. Entre los dos tiene que estar el programa que ya existe: es el que descarta
+   lo que la casa no ofrece, el que no da por buena una suposición, el que deriva las
+   consultas de salud y el que arma la fila de la hoja.
+
+**Próximo paso.** Que el flujo detecte un correo nuevo de verdad, y encadenar las cinco
+piezas hasta la hoja.
+
+---
+
 ## 2026-09-08 — Fase 1, paso 2: las columnas de la hoja de registro
 
 **Qué se hizo.** Quedó definida la hoja donde el sistema anota cada pedido, que es el

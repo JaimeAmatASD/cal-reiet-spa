@@ -5,6 +5,20 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-09-11 — Gemini como modelo que lee el correo
+
+**Contexto**: la parte que entiende el correo la hace n8n con su nodo de IA, y hay que
+elegir con qué modelo. Es una llamada por correo que entra, todo el día.
+**Alternativas**: Claude, que es lo que se usa para construir el proyecto.
+**Elegido**: Gemini, en su versión más barata. Leer un correo y devolver seis campos no
+pide un modelo caro, y el volumen es de todos los días.
+**Costo aceptado**: ninguno visible mientras respete el contrato. Lo que devuelve está
+definido en `docs/contrato-lectura.md` y lo comprueba el sistema al recibirlo: si un
+campo llega sin decir de dónde salió, se para y avisa. Cambiar de modelo es cambiar un
+nodo, no rehacer nada.
+**Se revisa si**: Gemini se equivoca en las veinte peticiones de prueba más de lo que
+cuesta la diferencia de precio.
+
 ## 2026-09-08 — La hoja de registro no guarda el correo del cliente
 
 **Contexto**: hay que definir las columnas de la hoja donde el sistema anota cada
