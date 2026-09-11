@@ -1,0 +1,48 @@
+descripcion: >-
+  Pide día, franja y personas pero no dice cuánto quiere que dure. Es el caso
+  más común: hay que ofrecerle las tres duraciones, no esperar a que pregunte.
+
+hilo:
+  id: hilo-002
+  asunto: Reserva masaje sábado
+  mensajes:
+    - de: t.brenner@ejemplo.com
+      nombre: Tomás Brenner
+      texto: |
+        Hola,
+
+        ¿Podríamos reservar un masaje para dos el sábado 19 por la mañana?
+
+        Gracias.
+
+lectura:
+  idioma: es
+  intencion: reserva
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Tomás Brenner, origen: dicho}
+    correo: {valor: t.brenner@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: null, origen: dicho}
+    fecha: {valor: "2026-09-19", origen: dicho}
+    franja: {valor: mañana, origen: dicho}
+    personas: {valor: 2, origen: dicho}
+
+espera:
+  salida: incompleto
+  falta: [duracion]
+  a_confirmar: []
+  idioma: es
+  borrador_contiene:
+    - "Hola Tomás Brenner,"
+    - "¿Cuánto quieres que dure el masaje?"
+    - "  - 40 minutos"
+    - "  - 60 minutos"
+    - "  - 90 minutos"
+    - "[COMPLETAR A MANO: huecos libres del 19 de septiembre]"
+  borrador_no_contiene:
+    - "2026-09-19"
+    - "¿Qué día te viene bien?"
+    - "¿Para cuántas personas sería?"

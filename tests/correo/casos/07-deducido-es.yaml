@@ -1,0 +1,42 @@
+descripcion: >-
+  Están los cuatro datos, pero el día salió de interpretar "el viernes". Un
+  campo deducido no se da por bueno: la ficha sale incompleta y el borrador
+  se lo confirma al cliente.
+
+hilo:
+  id: hilo-007
+  asunto: Masaje
+  mensajes:
+    - de: n.eguren@ejemplo.com
+      nombre: Nora Eguren
+      texto: |
+        Hola, ¿tenéis hueco el viernes por la mañana para un masaje de 40
+        minutos? Seríamos dos.
+
+lectura:
+  idioma: es
+  intencion: reserva
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Nora Eguren, origen: dicho}
+    correo: {valor: n.eguren@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: 40, origen: dicho}
+    fecha: {valor: "2026-09-11", origen: deducido}
+    franja: {valor: mañana, origen: dicho}
+    personas: {valor: 2, origen: dicho}
+
+espera:
+  salida: incompleto
+  falta: []
+  a_confirmar: [fecha]
+  idioma: es
+  borrador_contiene:
+    - "Antes de buscarte hueco, confírmanos una cosa:"
+    - "  - el día: 11 de septiembre"
+  borrador_no_contiene:
+    - "2026-09-11"
+    - "¿Qué día te viene bien?"
+    - Lo tenemos todo para buscarte hueco.

@@ -1,0 +1,40 @@
+descripcion: >-
+  Cuenta una lesión. Es dato de salud y no se guarda nada del correo. Ojo: acá
+  la lectura de la IA dice "reserva" a propósito, porque no vio la señal. La
+  red de seguridad de casa.yaml tiene que atraparlo igual.
+
+hilo:
+  id: hilo-003
+  asunto: Consulta masaje
+  mensajes:
+    - de: p.solano@ejemplo.com
+      nombre: Pau Solano
+      texto: |
+        Hola,
+
+        Quería reservar un masaje de 60 minutos para el día 15 por la tarde.
+        Aviso que tengo una hernia discal y estoy en tratamiento con el
+        fisioterapeuta desde marzo, no sé si es compatible.
+
+        Un saludo,
+        Pau
+
+lectura:
+  idioma: es
+  intencion: reserva
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Pau Solano, origen: dicho}
+    correo: {valor: p.solano@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: 60, origen: dicho}
+    fecha: {valor: "2026-09-15", origen: dicho}
+    franja: {valor: tarde, origen: dicho}
+    personas: {valor: 1, origen: deducido}
+
+espera:
+  salida: derivar
+  motivo: salud
+  sin_borrador: true

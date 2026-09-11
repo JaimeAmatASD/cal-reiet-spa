@@ -1,0 +1,45 @@
+descripcion: >-
+  El último mensaje no dice casi nada. El nombre, la habitación y el día están
+  en los mensajes anteriores del hilo. Hay que trabajar sobre la conversación
+  entera, no sobre el último correo.
+
+hilo:
+  id: hilo-004
+  asunto: Masaje jueves
+  mensajes:
+    - de: irene.castells@ejemplo.com
+      nombre: Irene Castells
+      texto: |
+        Hola, somos los de la habitación 14. Nos gustaría un masaje de 90
+        minutos el jueves 17 por la tarde, para dos personas.
+    - de: wellbeing@ejemplo.com
+      nombre: Wellbeing
+      texto: |
+        Hola Irene, lo miramos y te decimos algo.
+    - de: irene.castells@ejemplo.com
+      nombre: Irene Castells
+      texto: |
+        Perfecto, mantengo la reserva.
+
+lectura:
+  idioma: es
+  intencion: reserva
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Irene Castells, origen: historial}
+    correo: {valor: irene.castells@ejemplo.com, origen: historial}
+    habitacion: {valor: "14", origen: historial}
+  peticion:
+    duracion: {valor: 90, origen: historial}
+    fecha: {valor: "2026-09-17", origen: historial}
+    franja: {valor: tarde, origen: historial}
+    personas: {valor: 2, origen: historial}
+
+espera:
+  salida: completo
+  falta: []
+  a_confirmar: []
+  idioma: es
+  borrador_contiene:
+    - "Hola Irene Castells,"

@@ -1,0 +1,39 @@
+descripcion: >-
+  Pide que le recomendemos. Eso lo decide una persona, no el sistema. No es
+  dato de salud, así que la ficha se guarda entera para que quien conteste
+  tenga el contexto.
+
+hilo:
+  id: hilo-006
+  asunto: Qué nos recomendáis
+  mensajes:
+    - de: v.arrieta@ejemplo.com
+      nombre: Valeria Arrieta
+      texto: |
+        Buenos días,
+
+        Venimos el fin de semana del 26 y no sabemos qué elegir. ¿Qué nos
+        recomendáis para dos personas por la tarde?
+
+        Gracias.
+
+lectura:
+  idioma: es
+  intencion: derivar
+  senales_salud: false
+  pide_recomendacion: true
+  cliente:
+    nombre: {valor: Valeria Arrieta, origen: dicho}
+    correo: {valor: v.arrieta@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: null, origen: dicho}
+    fecha: {valor: "2026-09-26", origen: dicho}
+    franja: {valor: tarde, origen: dicho}
+    personas: {valor: 2, origen: dicho}
+
+espera:
+  salida: derivar
+  motivo: recomendacion
+  sin_borrador: true
+  cliente_guardado: true

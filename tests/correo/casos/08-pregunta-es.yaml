@@ -1,0 +1,31 @@
+descripcion: >-
+  No pide reserva, pregunta otra cosa. El sistema no redacta: contesta una
+  persona, que es la que sabe qué le preguntaron.
+
+hilo:
+  id: hilo-008
+  asunto: Horario del spa
+  mensajes:
+    - de: r.duarte@ejemplo.com
+      nombre: Rita Duarte
+      texto: |
+        Hola, ¿hasta qué hora está abierto el spa los domingos?
+
+lectura:
+  idioma: es
+  intencion: pregunta
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Rita Duarte, origen: dicho}
+    correo: {valor: r.duarte@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: null, origen: dicho}
+    fecha: {valor: null, origen: dicho}
+    franja: {valor: null, origen: dicho}
+    personas: {valor: null, origen: dicho}
+
+espera:
+  salida: incompleto
+  sin_borrador: true

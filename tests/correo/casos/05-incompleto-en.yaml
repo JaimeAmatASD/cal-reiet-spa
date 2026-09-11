@@ -1,0 +1,50 @@
+descripcion: >-
+  Escribe en inglés y solo dice el día. Todo lo que falta se pregunta en un
+  solo correo, y en su idioma.
+
+hilo:
+  id: hilo-005
+  asunto: Spa booking
+  mensajes:
+    - de: j.whitfield@ejemplo.com
+      nombre: Joan Whitfield
+      texto: |
+        Hello,
+
+        We would like to book a massage during our stay, ideally on the 20th.
+        Could you let us know what you have?
+
+        Best,
+        Joan
+
+lectura:
+  idioma: en
+  intencion: reserva
+  senales_salud: false
+  pide_recomendacion: false
+  cliente:
+    nombre: {valor: Joan Whitfield, origen: dicho}
+    correo: {valor: j.whitfield@ejemplo.com, origen: dicho}
+    habitacion: {valor: null, origen: dicho}
+  peticion:
+    duracion: {valor: null, origen: dicho}
+    fecha: {valor: "2026-09-20", origen: dicho}
+    franja: {valor: null, origen: dicho}
+    personas: {valor: null, origen: dicho}
+
+espera:
+  salida: incompleto
+  falta: [duracion, franja, personas]
+  a_confirmar: []
+  idioma: en
+  borrador_contiene:
+    - "Hello Joan Whitfield,"
+    - How long would you like the massage to be?
+    - "  - 40 minutes"
+    - Would you prefer morning or afternoon?
+    - How many people would it be for?
+    - "[FILL IN BY HAND: free slots on 20 September]"
+    - Wellbeing Team - Cal Reiet
+  borrador_no_contiene:
+    - "2026-09-20"
+    - Which day suits you best?
