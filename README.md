@@ -10,7 +10,59 @@ real del hotel.
 
 ## Cómo correrlo
 
-<!-- completar cuando exista n8n corriendo -->
+Para ver el recorrido completo —entra un correo, sale una petición para el grupo de
+terapeutas— sin conectarse a nada:
+
+```bash
+source .venv/bin/activate
+python ver_recorrido.py
+```
+
+Los correos y la agenda son inventados y la parte que entiende el correo viene grabada,
+así que da siempre lo mismo. No manda nada ni toca ningún calendario.
+
+La batería de pruebas:
+
+```bash
+pytest
+```
+
+### Cómo lo llama n8n
+
+n8n corre en JavaScript y esto es Python. Se hablan por línea de comandos: entra un
+JSON, sale un JSON. Dos comandos:
+
+```bash
+echo '{"pedido": {...}, "agenda": [...]}'                | python src/cli.py procesar
+echo '{"ficha": {...}, "inicio": "12:15", "salas": [...]}' | python src/cli.py peticion
+```
+
+`procesar` dice qué hacer con un pedido. Si no le pasás la agenda del día, contesta
+`falta_agenda` con la fecha: n8n la busca en el calendario y vuelve a llamar.
+
+`peticion` escribe el bloque para el grupo de terapeutas, con la hora que eligió una
+persona entre las libres.
+
+Si algo falla sale `{"error": ...}` y el programa termina con código distinto de cero.
+
+### Cómo arrancar n8n
+
+n8n vive en esta misma máquina, al lado del código, porque el puente entre los dos es
+por línea de comandos y eso pide que compartan máquina.
+
+```bash
+NODE_OPTIONS=--max-old-space-size=768 n8n start
+```
+
+El editor queda en http://localhost:5678. Pide Node 24.
+
+**Antes de arrancarlo hay que cerrar Steam.** La máquina tiene 3,6 GB de memoria, n8n
+pide unos 600 MB, y con Steam abierto no entra: el sistema lo mata a los pocos minutos.
+Medido el 2026-09-08: con Steam cerrado, n8n se mantiene en 498 MB y quedan 1,1 GB
+libres. El techo de memoria del comando está puesto a propósito, para que n8n se frene
+solo en vez de que lo mate el sistema.
+
+Mientras n8n corra en esta máquina, el sistema solo mide con la máquina encendida.
 
 ## Entorno de laboratorio
 
@@ -24,4 +76,6 @@ Copiá `.env.example` a `.env` y completá los valores. `.env` nunca se commitea
 - `docs/bitacora.md` — qué se hizo y cuándo
 - `docs/decisions.md` — por qué se hizo así
 - `docs/lessons.md` — errores que no hay que recometer
+- `docs/convenciones.md` — el formato exacto de la petición, la confirmación y el parte
+- `docs/contrato-lectura.md` — qué tiene que devolver la parte de IA, y qué se le pide
 - `docs/references.md` — material previo y de consulta

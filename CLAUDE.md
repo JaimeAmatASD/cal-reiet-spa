@@ -34,7 +34,8 @@ python3 -m venv .venv && .venv/bin/pip install PyYAML pytest
 ```
 
 Python. El código propio vive en `src/`, la configuración de la casa en
-`config/casa.yaml`. Convenciones de tests: `.claude/rules/tests.md`.
+`config/casa.yaml` y el catálogo de tratamientos en `config/tratamientos.yaml`.
+Convenciones de tests: `.claude/rules/tests.md`.
 
 ## Stack
 
@@ -57,8 +58,14 @@ y la máquina de estados de la reserva.
 - **Nada específico de esta casa dentro del código.** Tratamientos, duraciones, salas,
   los quince minutos, textos e idiomas van en configuración. El sistema tiene que poder
   montarse en otra casa cambiando un archivo.
-- **Nunca escribir en los calendarios ni en el buzón de producción** mientras el
-  proyecto esté en laboratorio.
+- **Dos cuentas de Google, y no se mezclan.** Se escribe SOLO en
+  `calreiet.lab@gmail.com`, que es el laboratorio. En `lucioamat@gmail.com` **NUNCA
+  se escribe**: es la cuenta desde la que se ve el calendario real del hotel, y es
+  solo de lectura. Antes de escribir en un calendario se mira de quién es. Si no es
+  del laboratorio, no se escribe: se pregunta.
+- **Del calendario real solo se leen horas.** Hora de inicio, hora de fin y sala. Los
+  títulos y las descripciones llevan nombres, correos y teléfonos de clientes, y se
+  descartan en el momento. El buscador de huecos no necesita nada más.
 - **Ninguna credencial se commitea.** Van en `.env`, que está en `.gitignore`.
 
 ## Cómo trabajar acá
@@ -74,9 +81,9 @@ y la máquina de estados de la reserva.
 
 ## Estructura
 
-- `docs/` — bitácora, decisiones, lecciones y referencias
+- `docs/` — bitácora, decisiones, lecciones, convenciones y referencias
 - `flows/` — exportaciones de n8n en JSON
-- `src/` — el buscador de huecos y la máquina de estados
+- `src/` — el recorrido del pedido: entender, buscar hueco y armar la petición
 - `config/` — todo lo propio de la casa
 
 ## Glosario
@@ -95,5 +102,5 @@ hablar con el hotel.
 Que un terapeuta quede asignado no significa que la reserva esté confirmada. Son dos
 cosas distintas y no se mezclan.
 
-Convenciones de títulos de calendario y formato de los mensajes: en el skill
-`cal-reiet-spa-reservas`, archivo `references/convenciones.md`.
+Formato exacto de la petición, la confirmación y el parte: `docs/convenciones.md`.
+Salió de los mensajes reales del grupo, y el sistema tiene que producir eso mismo.

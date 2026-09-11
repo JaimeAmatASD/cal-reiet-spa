@@ -22,19 +22,15 @@ Material previo y de consulta. "Hacé algo como esto".
   No se usa como criterio de aceptación ni se implementa nada porque esté ahí. Decisión
   de James, septiembre 2026.
 
-- **Hoja «Cal Reiet Masajes Asignación»** (Google Drive del laboratorio) — la plantilla
-  real que hoy se manda a mano al grupo. Cuatro campos y nada más:
+- **Mensajes reales del grupo de terapeutas** (septiembre 2026) — de ahí salen los
+  formatos de la petición, la confirmación y el parte del día, que están escritos en
+  `docs/convenciones.md`. Es la fuente buena: son los mensajes que se mandan de verdad.
 
-  ```
-  ⚜️ Petición ⚜️
-  Masajista:     @nombre
-  Tratamiento:   DT 90`
-  Dia:           11-Sep-2025
-  Habitacion:    #11
-  ```
-
-  La confirmación repite los mismos cuatro campos. De acá sale que el número con
-  comilla son minutos y que la almohadilla es habitación.
+  Ojo: la hoja «Cal Reiet Masajes Asignación» del Drive tiene una plantilla de cuatro
+  campos —Masajista, Tratamiento, Dia, Habitacion— que estuvo anotada acá como si fuera
+  el formato de la petición. **No lo es.** La petición real tiene cinco líneas, encabezado
+  con el estado de cobro y hora exacta de principio y fin. La plantilla de la hoja es
+  otra cosa y no se usa como criterio.
 
   La misma hoja lleva tres columnas más — Terapeutas, Próximo y Contador — que son un
   turno rotativo entre terapeutas. Ese criterio de reparto no está en ningún documento
