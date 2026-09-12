@@ -179,28 +179,4 @@ Solo lo que se deduce de dos días de mensajes, que no alcanza:
 O sea que las salas abren a las 10:00 o antes, y cierran a las 17:30 o después. La hora
 exacta no la sabemos y hace falta para buscar huecos.
 
----
-
-## Huecos, para preguntarle a Egi
-
-Cosas que hoy se están suponiendo. Cada una cambia lo que hace el sistema:
-
-1. **Qué decide el encabezado de la petición**: `Petición` a secas o
-   `PETICIÓN A Espera de pago`. ¿Depende de si es externo, de si ya pagó, o de nada?
-2. **A qué hora abren y cierran las salas.** Sin esto el buscador de huecos no sabe
-   dónde termina el día.
-3. **Dónde corta la mañana y empieza la tarde**, para poder filtrar por lo que pidió
-   el cliente.
-4. **El catálogo real completo, con precios.** Ya viene demorado y bloquea que la
-   petición salga con el nombre de verdad del tratamiento.
-5. **Qué es el «2» de la clienta externa.** Sabemos lo que NO es: no es una
-   habitación, porque los externos no llevan. Aparece como `Julia #2 (External)` en el
-   parte y `Julia 2 ( Ext)` en el calendario, la misma persona el mismo día. La
-   hipótesis buena es que sean dos personas: esa reserva ocupa las dos salas a la misma
-   hora con el mismo número de INV. Falta confirmarlo. Hasta entonces el sistema no lo
-   interpreta.
-6. **El turno rotativo entre terapeutas** — las columnas Terapeutas, Próximo y Contador
-   de la hoja de asignación. No está decidido si se conserva. Hay que resolverlo antes
-   de la fase 5.
-
 <!-- Convenciones nuevas al final -->

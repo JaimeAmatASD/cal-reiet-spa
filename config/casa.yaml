@@ -16,9 +16,10 @@ margen_minutos: 15
 # A qué hora abren y cierran las salas. Marca dónde empieza y termina el día
 # para buscar huecos: fuera de esto no se ofrece nada.
 #
-# PROVISIONAL - pendiente de que lo confirme Egi. Estos valores están deducidos
-# de dos días de mensajes reales: el tratamiento más temprano empezaba a las
-# 10:00 y el más tardío terminaba a las 17:30.
+# SIN CONFIRMAR POR EL HOTEL. Estos valores están deducidos de dos días de
+# mensajes reales: el tratamiento más temprano empezaba a las 10:00 y el más
+# tardío terminaba a las 17:30. La hora real de apertura y de cierre no la
+# sabemos todavía.
 #
 # Las horas van SIEMPRE entre comillas. Sin comillas, este formato lee 10:00
 # como el número 600 y el sistema no arranca.
@@ -31,7 +32,7 @@ horario:
 # hora exacta: con la franja alcanza para buscar hueco, y elegir la hora dentro
 # de la franja es de una persona.
 #
-# PROVISIONAL - dónde corta la mañana lo tiene que confirmar Egi.
+# SIN CONFIRMAR POR EL HOTEL: dónde corta la mañana está puesto a ojo.
 
 franjas:
   mañana:

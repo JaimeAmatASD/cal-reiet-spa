@@ -51,8 +51,16 @@ n8n vive en esta misma máquina, al lado del código, porque el puente entre los
 por línea de comandos y eso pide que compartan máquina.
 
 ```bash
-NODE_OPTIONS=--max-old-space-size=768 n8n start
+NODE_OPTIONS=--max-old-space-size=768 \
+NODES_EXCLUDE='["n8n-nodes-base.localFileTrigger"]' \
+n8n start
 ```
+
+Las dos cosas del comando son a propósito. El techo de memoria hace que n8n se frene
+solo en vez de que lo mate el sistema. Y la segunda línea vuelve a habilitar el paso
+que ejecuta un comando, que es **el puente por el que n8n le habla a nuestro código**:
+n8n 2 lo trae apagado de fábrica y sin esto el recorrido se corta ahí, avisando de un
+paso que no reconoce. Arrancar n8n sin esa línea deja el flujo inservible.
 
 El editor queda en http://localhost:5678. Pide Node 24.
 
@@ -63,6 +71,27 @@ libres. El techo de memoria del comando está puesto a propósito, para que n8n 
 solo en vez de que lo mate el sistema.
 
 Mientras n8n corra en esta máquina, el sistema solo mide con la máquina encendida.
+
+Para que no se apague cuando se cierra la terminal o la sesión que lo lanzó, se arranca
+desprendido, con `setsid nohup` delante de `n8n start`.
+
+### El flujo
+
+El flujo que corre en n8n está copiado en `flows/del-correo-a-la-ficha.json`. **Esa
+copia sale siempre de exportarlo desde n8n**, nunca se escribe a mano: un nombre de
+casillero mal puesto se importa sin avisar y deja el paso vacío.
+
+Para cargar cambios en n8n sin perder lo que hay adentro: se apaga n8n, se guarda una
+copia de `~/.n8n/database.sqlite` en `~/.n8n/copias/`, se exporta el flujo, se cambia la
+exportación, se importa, y se vuelve a arrancar.
+
+```bash
+n8n export:workflow --id=<id del flujo> --output=flujo.json
+n8n import:workflow --input=flujo.json
+```
+
+Si n8n está abierto en el navegador, hay que recargar la página después de importar:
+guardar desde la pestaña vieja pisa lo importado.
 
 ### El permiso de Google
 

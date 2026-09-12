@@ -17,11 +17,6 @@ Material previo y de consulta. "Hacé algo como esto".
 - **Anexo de casos de uso** — dieciséis situaciones reales agrupadas por tipo. Sirve como
   criterio de aceptación de cada fase y como examen para cualquier proveedor externo.
 
-- **Borrador de requerimientos de Egi** — NO es una especificación. Es una declaración
-  de intenciones, escrita con estilo de pliego, y no describe cómo funciona la casa.
-  No se usa como criterio de aceptación ni se implementa nada porque esté ahí. Decisión
-  de James, septiembre 2026.
-
 - **Mensajes reales del grupo de terapeutas** (septiembre 2026) — de ahí salen los
   formatos de la petición, la confirmación y el parte del día, que están escritos en
   `docs/convenciones.md`. Es la fuente buena: son los mensajes que se mandan de verdad.

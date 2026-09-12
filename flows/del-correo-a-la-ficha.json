@@ -1,0 +1,385 @@
+{
+  "name": "Cal Reiet - del correo a la ficha",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        0,
+        304
+      ],
+      "id": "correo-nuevo",
+      "name": "Correo nuevo",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tw8vfFqARbSxMUGX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "thread",
+        "operation": "get",
+        "threadId": "={{ $json.threadId }}",
+        "options": {
+          "returnOnlyMessages": true
+        },
+        "simple": false
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        304
+      ],
+      "id": "traer-el-hilo-entero",
+      "name": "Traer el hilo entero",
+      "webhookId": "8fbe6138-91d1-482a-adae-7a6d86d92972",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "tw8vfFqARbSxMUGX",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Deja el hilo con la forma que espera nuestro código: id, asunto y mensajes.\n// \"Traer el hilo entero\" entrega un ítem por mensaje, con el cuerpo codificado\n// dentro de payload. Del correo solo se toma quién escribe y qué escribió.\nconst decodificar = (data, charset) => {\n  const bytes = Buffer.from(String(data).replace(/-/g, \"+\").replace(/_/g, \"/\"), \"base64\");\n  return /8859-1|latin1|windows-1252/i.test(charset || \"\") ? bytes.toString(\"latin1\") : bytes.toString(\"utf8\");\n};\nconst charsetDe = (tipo) => (String(tipo || \"\").match(/charset=\"?([^\";\\s]+)/i) || [])[1];\nconst cabecera = (parte, nombre) =>\n  (parte.headers || []).find(h => h.name.toLowerCase() === nombre.toLowerCase())?.value;\n// Busca la primera parte del tipo pedido, recorriendo las partes anidadas.\nconst buscar = (parte, tipo, tipoRaiz) => {\n  if (!parte) return \"\";\n  if (parte.mimeType === tipo && parte.body?.data) {\n    return decodificar(parte.body.data, charsetDe(cabecera(parte, \"Content-Type\") || tipoRaiz));\n  }\n  for (const p of parte.parts || []) {\n    const t = buscar(p, tipo, tipoRaiz);\n    if (t) return t;\n  }\n  return \"\";\n};\nconst sinHtml = (html) => html\n  .replace(/<(style|script)[\\s\\S]*?<\\/\\1>/gi, \"\")\n  .replace(/<br\\s*\\/?>|<\\/p>|<\\/div>/gi, \"\\n\")\n  .replace(/<[^>]+>/g, \"\")\n  .replace(/&nbsp;/g, \" \").replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n  .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nconst items = $input.all().map(i => i.json);\nconst mensajes = items.map(m => {\n  const de = m.From || \"\";\n  const correo = (de.match(/<([^>]+)>/) || [])[1] || de.trim();\n  const tipoRaiz = m[\"Content-Type\"];\n  const texto = buscar(m.payload, \"text/plain\", tipoRaiz)\n    || sinHtml(buscar(m.payload, \"text/html\", tipoRaiz))\n    || m.snippet || \"\";\n  return {\n    de: correo,\n    nombre: de.replace(/<.*>/, \"\").replace(/\"/g, \"\").trim(),\n    texto: texto.trim(),\n  };\n});\nconst hoy = new Date().toISOString().slice(0, 10);\nreturn [{ json: {\n  hilo: { id: items[0]?.threadId || items[0]?.id, asunto: items[0]?.Subject || \"\", mensajes },\n  fecha_hoy: hoy,\n  duraciones: \"40, 60, 90\",\n  texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        448,
+        304
+      ],
+      "id": "armar-el-hilo",
+      "name": "Armar el hilo"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Sé estricto con \"dicho\". Si el cliente escribe \"el viernes\" y vos ponés una fecha, eso es \"deducido\". Si escribe \"para los dos\" y ponés 2 personas, eso es \"deducido\". Ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si quiere reservar, \"pregunta\" si solo pregunta por precios u horarios, y \"derivar\" si es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $json.texto_hilo }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        672,
+        304
+      ],
+      "id": "leer-el-correo",
+      "name": "Leer el correo"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        672,
+        480
+      ],
+      "id": "modelo-gemini",
+      "name": "Modelo Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "iL8VoEebuBcseIEl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Junta el hilo con lo que entendió el modelo y arma lo que come nuestro código.\nconst crudo = $json.text ?? $json.response?.text ?? JSON.stringify($json);\nconst limpio = String(crudo).replace(/^```(json)?/i, \"\").replace(/```$/, \"\").trim();\nlet lectura;\ntry { lectura = JSON.parse(limpio); }\ncatch (e) { throw new Error(\"El modelo no devolvió un JSON válido: \" + limpio.slice(0, 300)); }\nconst hilo = $('Armar el hilo').first().json.hilo;\nreturn [{ json: { entrada: { pedido: { origen: \"buzon\", hilo, lectura } } } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        304
+      ],
+      "id": "armar-el-pedido",
+      "name": "Armar el pedido"
+    },
+    {
+      "parameters": {
+        "command": "=echo '{{ JSON.stringify($json.entrada).base64Encode() }}' | base64 -d | /home/jaime/cal-reiet-spa/.venv/bin/python /home/jaime/cal-reiet-spa/src/cli.py procesar"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1104,
+        304
+      ],
+      "id": "procesar-el-pedido",
+      "name": "Procesar el pedido"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "falta-agenda",
+              "leftValue": "={{ JSON.parse($json.stdout).accion }}",
+              "rightValue": "falta_agenda",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1328,
+        304
+      ],
+      "id": "¿falta-la-agenda?",
+      "name": "¿Falta la agenda?"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "53d5d26670bafbdcb600d328fea026c75cf47db51ea2673552b94686b5410579@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Sala 1 Lab"
+        },
+        "returnAll": true,
+        "timeMin": "={{ JSON.parse($('Procesar el pedido').first().json.stdout).fecha }}T00:00:00",
+        "timeMax": "={{ JSON.parse($('Procesar el pedido').first().json.stdout).fecha }}T23:59:59",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        192
+      ],
+      "id": "agenda-sala_1",
+      "name": "Agenda sala_1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "ruuuZgOhZ5cp9gCj",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "c89334d97e6fcba52a65475bd20836d0d2b69149ff41681edc9fa89070b1f1ea@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "Sale 2 Lab"
+        },
+        "returnAll": true,
+        "timeMin": "={{ JSON.parse($('Procesar el pedido').first().json.stdout).fecha }}T00:00:00",
+        "timeMax": "={{ JSON.parse($('Procesar el pedido').first().json.stdout).fecha }}T23:59:59",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendar",
+      "typeVersion": 1.3,
+      "position": [
+        1552,
+        400
+      ],
+      "id": "agenda-sala_2",
+      "name": "Agenda sala_2",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "ruuuZgOhZ5cp9gCj",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// REGLA DURA DEL PROYECTO: del calendario real solo se leen horas.\n// Los títulos y las descripciones llevan nombres, correos y teléfonos de\n// clientes. Acá se tiran en el momento y no salen de este nodo.\nconst hhmm = (e) => String(e.start?.dateTime || e.start?.date || \"\").slice(11, 16);\nconst fin  = (e) => String(e.end?.dateTime || e.end?.date || \"\").slice(11, 16);\nconst agenda = [];\nfor (const sala of [\"sala_1\", \"sala_2\"]) {\n  let eventos = [];\n  try { eventos = $(`Agenda ${sala}`).all().map(i => i.json); } catch (e) { eventos = []; }\n  for (const e of eventos) {\n    const desde = hhmm(e), hasta = fin(e);\n    if (desde && hasta) agenda.push({ sala, desde, hasta });\n  }\n}\nconst entrada = $('Armar el pedido').first().json.entrada;\nreturn [{ json: { entrada: { ...entrada, agenda } } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        304
+      ],
+      "id": "armar-la-agenda",
+      "name": "Armar la agenda"
+    },
+    {
+      "parameters": {
+        "command": "=echo '{{ JSON.stringify($json.entrada).base64Encode() }}' | base64 -d | /home/jaime/cal-reiet-spa/.venv/bin/python /home/jaime/cal-reiet-spa/src/cli.py procesar"
+      },
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        304
+      ],
+      "id": "procesar-con-la-agenda",
+      "name": "Procesar con la agenda"
+    }
+  ],
+  "connections": {
+    "Correo nuevo": {
+      "main": [
+        [
+          {
+            "node": "Traer el hilo entero",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Traer el hilo entero": {
+      "main": [
+        [
+          {
+            "node": "Armar el hilo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el hilo": {
+      "main": [
+        [
+          {
+            "node": "Leer el correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer el correo": {
+      "main": [
+        [
+          {
+            "node": "Armar el pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Leer el correo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el pedido": {
+      "main": [
+        [
+          {
+            "node": "Procesar el pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Procesar el pedido": {
+      "main": [
+        [
+          {
+            "node": "¿Falta la agenda?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "¿Falta la agenda?": {
+      "main": [
+        [
+          {
+            "node": "Agenda sala_1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Agenda sala_2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    },
+    "Agenda sala_1": {
+      "main": [
+        [
+          {
+            "node": "Armar la agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Agenda sala_2": {
+      "main": [
+        [
+          {
+            "node": "Armar la agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar la agenda": {
+      "main": [
+        [
+          {
+            "node": "Procesar con la agenda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "pinData": {},
+  "id": "21Tm5a38Cv2kh6MQ"
+}

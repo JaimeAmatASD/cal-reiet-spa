@@ -3,9 +3,9 @@
 # ############################################################################
 # ESTO ES PROVISIONAL. NO ES EL CATÁLOGO REAL.
 #
-# Es un mínimo para poder trabajar mientras Egi arma el definitivo, que es
-# más largo que el que está publicado en la web. Hoy el sistema no distingue
-# tipos de tratamiento: todo entra como "masaje".
+# Es un mínimo para poder trabajar. El catálogo de verdad es más largo que el
+# que está publicado en la web. Hoy el sistema no distingue tipos de
+# tratamiento: todo entra como "masaje".
 #
 # Faltan dos cosas y ninguna se inventa:
 #   1. El catálogo real, con todos los tratamientos.
@@ -27,10 +27,10 @@ tratamientos:
     # Las duraciones que se pueden reservar, en minutos, con su precio.
     duraciones:
       - minutos: 40
-        precio_eur:      # completar - Egi
+        precio_eur:      # sin confirmar
       - minutos: 60
-        precio_eur:      # completar - Egi
+        precio_eur:      # sin confirmar
       - minutos: 90
-        precio_eur:      # completar - Egi
+        precio_eur:      # sin confirmar
     # En qué salas se puede dar. Los ids salen de casa.yaml.
     salas: [sala_1, sala_2]

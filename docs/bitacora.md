@@ -7,6 +7,56 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-13 — Fase 1, paso 3: del correo a la ficha, de punta a punta
+
+**Qué se hizo.** El recorrido anda entero con correos de verdad del buzón del
+laboratorio: llega el correo, se trae la conversación completa, la IA la lee, nuestro
+código decide qué hacer y, si hace falta, se mira la agenda de las salas del
+laboratorio. Probado con un recibo de Google (sale «derivar», correcto) y con un pedido
+inventado al que le faltaba un dato (sale «borrador», correcto). No se manda nada, no
+se guarda nada en el correo y no se escribe en ninguna agenda.
+
+**Estado.** Terminado el tramo del correo a la decisión. Falta que la decisión quede
+anotada en la hoja.
+
+**Decisiones.** Ninguna de peso. James pasó la IA a Gemini 3.5 Flash Lite. Aprendido de paso:
+el regalo de 300 de Google no cubre Gemini, y un proyecto con saldo paga todo lo que
+usa, desde la primera consulta, sin parte gratis.
+
+**Se rompió algo.** Tres cosas, las tres en `lessons.md`: n8n vaciaba en silencio el
+paquete que le pasa a nuestro código; la conversación llegaba sin el texto de los
+correos, así que la IA leía nada; y el archivo del flujo tenía mal el nombre del
+casillero de la agenda, que llegaba vacío al importarlo. Además n8n se cayó una vez por
+falta de memoria con Chrome abierto. Antes de cargar los arreglos se guardó una copia
+de n8n en `~/.n8n/copias/`.
+
+**Lo que queda pendiente.**
+
+1. **El permiso de Google sigue en modo prueba y caduca a los siete días** (montado el
+   11, corta alrededor del 18). Hay que pasarlo a producción antes.
+2. **Todo lo que entra al buzón pasa por la IA**, también los avisos de Google. Gasta
+   saldo y, cuando haya hoja, va a meter filas que no son pedidos.
+3. El arreglo que saca el texto de la conversación vive dentro de n8n. Se probó aparte,
+   pero no quedó una prueba guardada en el repositorio.
+4. **Falta probar en n8n un pedido completo**, el que va a mirar las agendas del
+   laboratorio y devuelve horas libres. Las pruebas de hoy no llegaron hasta ahí.
+5. **Dentro del flujo hay cosas de la casa escritas a mano**: las duraciones que se le
+   pasan a la IA (40, 60, 90) y los id de las agendas de las salas. Contradice la regla
+   de que eso vive en configuración. No se tocó.
+6. **El horario de las salas no coincide consigo mismo**: `casa.yaml` dice que cierran a
+   las 19:00, pero su propio comentario habla de 17:30. Va en la pregunta 1 a Egi. No se
+   tocó.
+
+**Sobre la petición a terapeutas.** James preguntó cuánto falta para que salga. El texto
+ya lo arma nuestro código, probado. Faltan tres cosas: probar el pedido completo en n8n,
+un lugar donde una persona elija la hora, y un paso que llame a nuestro código con esa
+hora. Mandarla sola al grupo es fase 5. Hacerlo antes de la hoja sería adelantar fase:
+lo decide James.
+
+**Próximo paso.** Fase 1, paso 5: escribir la fila en la hoja de registro.
+
+---
+
 ## 2026-09-11 — n8n ya entra al buzón del laboratorio
 
 **Qué se hizo.** James montó el permiso de Google para la cuenta del laboratorio y lo
@@ -212,7 +262,7 @@ existe y se puede llenar, pero cuando falta la duración no se sabe de qué trat
 mostrar huecos. Y un cliente externo con habitación asignada sale como alojado, porque
 el sistema solo sabe si trajo habitación o no.
 
-**Cinco cosas que hay que preguntarle a Egi**, todas al final de `convenciones.md`: qué
+**Cinco cosas que hay que preguntarle a Egi**, hoy en `preguntas-para-egi.md`: qué
 decide el encabezado de la petición, a qué hora abren y cierran las salas, dónde corta
 la mañana, el catálogo real con precios, y si el turno rotativo se conserva.
 
@@ -285,8 +335,7 @@ n8n corriendo.
 Egi. Quedaron cerradas las tres ramas de excepción, la regla de los quince minutos entre
 tratamientos, y el plazo de doce horas para soltar una reserva sin pagar. Se documentaron
 las convenciones de títulos del calendario y el protocolo de peticiones del grupo de
-terapeutas. Se escribió un anexo de casos de uso reales para acompañar el borrador de
-requerimientos de Egi.
+terapeutas.
 
 **Estado.** Terminado. El flujo está validado.
 
