@@ -15,7 +15,8 @@ vuelve a llamar. Es en dos pasos porque hasta que no se lee el correo no se
 sabe de qué día hay que traer la agenda.
 
 `procesar` devuelve además `fila`: la línea que se escribe en la hoja de
-registro, con las columnas ya en orden.
+registro, con las columnas ya en orden. Y `fila_actualizar`: lo que se
+escribe si ese pedido ya tiene fila, sin el estado ni lo que llena una persona.
 
 `peticion` escribe el bloque para el grupo, con la hora que eligió una persona
 entre las libres. El sistema no elige la hora.
@@ -38,7 +39,8 @@ def procesar(entrada: dict, config: dict) -> dict:
     resultado = flujo.procesar(pedido, config, agenda_del_dia=entrada.get("agenda"))
     # La fila de la hoja va en la misma respuesta: n8n llama una vez y con lo
     # que sale escribe en la hoja, sin tener que mandarnos todo de vuelta.
-    return resultado | {"fila": registro.fila(pedido, resultado)}
+    fila = registro.fila(pedido, resultado)
+    return resultado | {"fila": fila, "fila_actualizar": registro.actualizacion(fila)}
 
 
 def armar_peticion(entrada: dict, config: dict) -> dict:

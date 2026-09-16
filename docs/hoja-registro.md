@@ -55,6 +55,20 @@ La columna `estado` usa el vocabulario cerrado del proyecto: SOLICITADA, EN HOLD
 ASIGNADA, CONFIRMADA, REALIZADA, CAÍDA, CANCELADA, SIN COBERTURA. En la fase 1 se mueve
 a mano; en la fase 5 la mueve el sistema.
 
+## Cuando el cliente vuelve a escribir
+
+Una fila por pedido, no por correo. Si el cliente contesta en la misma conversación, el
+pedido se vuelve a leer entero y **su fila se pone al día**: lo que antes faltaba ahora
+puede estar, y la lectura pasa de `incompleto` a `completo`. No se abre otra fila.
+
+Al ponerla al día **no se pisa** lo que es de la persona que lleva la reserva: `estado`,
+`respondido_en`, `desenlace` y `nota`. `entrado_en` tampoco cambia: es la hora del
+primer correo de la conversación, no la del último.
+
+Queda un caso sin cubrir: si la conversación empezó como una pregunta suelta y después
+se volvió reserva, `estado` queda vacío, porque solo se escribe al crear la fila. Hay
+que ponerle `SOLICITADA` a mano.
+
 ## Lo que la hoja NO guarda, a propósito
 
 - **El correo y el teléfono del cliente.** Para contestarle está el buzón; para contar

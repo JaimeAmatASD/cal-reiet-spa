@@ -104,3 +104,11 @@ def test_procesar_devuelve_tambien_la_fila_de_la_hoja_de_registro():
     assert salida["fila"]["pedido"] == "hilo-cli"
     assert salida["fila"]["duracion"] == 90
     assert salida["fila"]["canal"] == "buzon"
+
+
+def test_procesar_devuelve_lo_que_se_puede_pisar_si_la_fila_ya_existe():
+    codigo, salida = llamar("procesar", {"pedido": PEDIDO})
+
+    assert codigo == 0
+    assert salida["fila_actualizar"]["pedido"] == "hilo-cli"
+    assert "estado" not in salida["fila_actualizar"]

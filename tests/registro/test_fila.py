@@ -136,3 +136,48 @@ def test_una_pregunta_suelta_no_arranca_como_reserva_solicitada(config):
     fila = fila_de(pedido, config)
 
     assert fila["estado"] == ""
+
+
+@pytest.fixture
+def hora_de_madrid(monkeypatch):
+    # La hora se anota en la de la máquina, igual que `leido_en`. La prueba la
+    # fija para no depender de dónde corra.
+    import time
+    monkeypatch.setenv("TZ", "Europe/Madrid")
+    time.tzset()
+    yield
+    monkeypatch.undo()
+    time.tzset()
+
+
+def test_entrado_en_es_la_hora_del_primer_correo_de_la_conversacion(config, hora_de_madrid):
+    # n8n no sabe cuándo empezó el pedido: pasa la hora de cada correo, en la
+    # hora universal que da Gmail. El pedido entró con el primero, no con la
+    # respuesta que hizo saltar al sistema.
+    pedido = copy.deepcopy(PEDIDO)
+    del pedido["entrado_en"]
+    primero = pedido["hilo"]["mensajes"][0]
+    pedido["hilo"]["mensajes"] = [
+        primero | {"fecha": "2026-09-08T07:12:00.000Z"},
+        {"de": "marta.vidal@ejemplo.com", "nombre": "Marta Vidal",
+         "texto": "Perdón, por la tarde.", "fecha": "2026-09-08T10:40:00.000Z"},
+    ]
+
+    fila = fila_de(pedido, config)
+
+    assert fila["entrado_en"] == "2026-09-08T09:12:00"
+
+
+def test_al_actualizar_no_se_pisa_lo_que_mueve_o_escribe_una_persona(config):
+    # El cliente contesta en la misma conversación y el pedido se vuelve a
+    # leer. La fila ya existe: se actualiza con lo nuevo, pero el estado y las
+    # columnas a mano son de la persona que lleva la reserva.
+    fila = fila_de(PEDIDO, config)
+
+    cambios = registro.actualizacion(fila)
+
+    for columna in ("estado", "respondido_en", "desenlace", "nota"):
+        assert columna not in cambios, f"'{columna}' no se puede pisar"
+    assert cambios["pedido"] == "hilo-301"
+    assert cambios["lectura"] == "completo"
+    assert list(cambios) == [c for c in registro.COLUMNAS if c in cambios]

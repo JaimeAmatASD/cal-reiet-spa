@@ -17,7 +17,9 @@ Lo que NO se escribe acá, a propósito:
   - nada de una consulta derivada por salud. Esa fila lleva el número de hilo,
     cuándo entró y que se derivó. Ni el nombre. Ver docs/contrato-lectura.md.
 """
-__all__ = ["COLUMNAS", "fila"]
+from datetime import datetime
+
+__all__ = ["COLUMNAS", "fila", "actualizacion"]
 
 COLUMNAS = (
     # --- lo que escribe el sistema ---
@@ -47,6 +49,10 @@ COLUMNAS = (
 
 A_MANO = ("respondido_en", "desenlace", "nota")
 
+# Lo que el sistema escribe al crear la fila y no vuelve a tocar: el estado
+# arranca en SOLICITADA y de ahí lo mueve una persona.
+NO_SE_PISA = ("estado",) + A_MANO
+
 
 def fila(pedido: dict, resultado: dict) -> dict:
     """Devuelve la fila del registro para un pedido ya procesado."""
@@ -54,7 +60,7 @@ def fila(pedido: dict, resultado: dict) -> dict:
     base = dict.fromkeys(COLUMNAS, "")
     base |= {
         "pedido": ficha["hilo_id"],
-        "entrado_en": pedido.get("entrado_en", ""),
+        "entrado_en": pedido.get("entrado_en") or _primer_correo(pedido),
         "leido_en": ficha["leido_en"],
         "canal": pedido.get("origen", ""),
         "accion": resultado["accion"],
@@ -84,6 +90,30 @@ def fila(pedido: dict, resultado: dict) -> dict:
     }
 
 
+def actualizacion(fila: dict) -> dict:
+    """Lo que se escribe cuando la fila del pedido ya existe en la hoja.
+
+    Una fila por pedido: si el cliente contesta en la misma conversación, el
+    pedido se vuelve a leer y su fila se pone al día, sin abrir otra y sin
+    pisar lo que es de la persona que lleva la reserva.
+    """
+    return {c: v for c, v in fila.items() if c not in NO_SE_PISA}
+
+
 def _valor(campo: dict):
     """Un campo sin valor va como celda vacía, no como la palabra 'None'."""
     return campo["valor"] if campo["valor"] is not None else ""
+
+
+def _primer_correo(pedido: dict) -> str:
+    """Cuándo entró el pedido: la hora del primer correo de la conversación.
+
+    Gmail da la hora universal; se anota en la hora de la máquina, igual que
+    `leido_en`, para que la distancia entre las dos se pueda restar.
+    """
+    fechas = [m["fecha"] for m in pedido.get("hilo", {}).get("mensajes", [])
+              if m.get("fecha")]
+    if not fechas:
+        return ""
+    primera = min(datetime.fromisoformat(f) for f in fechas)
+    return primera.astimezone().replace(tzinfo=None).isoformat(timespec="seconds")
