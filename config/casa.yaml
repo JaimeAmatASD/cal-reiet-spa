@@ -47,6 +47,18 @@ franjas:
 # no un vencimiento. Ver docs/decisions.md.
 aviso_sin_pago_horas: 12
 
+# --- Buzón ------------------------------------------------------------------
+# Remitentes automáticos: lo que llega de estos dominios no es un pedido y no
+# se le pasa a la IA, que cuesta saldo y metería filas en la hoja que no son
+# pedidos. Vale también para los subdominios: google.com deja afuera
+# accounts.google.com.
+#
+# Ojo: gmail.com NO va acá. De ahí escriben muchos clientes.
+# Si un cliente contesta dentro de una conversación con uno de estos, se lee.
+
+remitentes_automaticos:
+  - google.com
+
 # --- Salas ------------------------------------------------------------------
 # Una sala = un calendario de Google. El id de cada calendario va en .env,
 # nunca acá: este archivo se commitea.

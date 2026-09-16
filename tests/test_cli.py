@@ -112,3 +112,12 @@ def test_procesar_devuelve_lo_que_se_puede_pisar_si_la_fila_ya_existe():
     assert codigo == 0
     assert salida["fila_actualizar"]["pedido"] == "hilo-cli"
     assert "estado" not in salida["fila_actualizar"]
+
+
+def test_hay_que_leer_dice_si_la_conversacion_pasa_por_la_ia():
+    # n8n pregunta antes de mandarle el correo a la IA, que cuesta saldo.
+    aviso = {"hilo": {"id": "h", "asunto": "Alerta", "mensajes": [
+        {"de": "no-reply@accounts.google.com", "nombre": "Google", "texto": "x"}]}}
+
+    assert llamar("hay_que_leer", aviso) == (0, {"leer": False})
+    assert llamar("hay_que_leer", {"hilo": PEDIDO["hilo"]}) == (0, {"leer": True})

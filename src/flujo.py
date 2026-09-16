@@ -24,7 +24,23 @@ from agenda import huecos as buscar_huecos
 from casa import duraciones
 from ficha import armar as armar_ficha
 
-__all__ = ["procesar"]
+__all__ = ["procesar", "hay_que_leer"]
+
+
+def hay_que_leer(hilo: dict, config: dict) -> bool:
+    """Si la conversación pasa por la IA, que cuesta saldo.
+
+    No pasa si todos los que escribieron son remitentes automáticos de la casa:
+    avisos que no son pedidos y que meterían filas en la hoja. En cuanto un
+    cliente escribe en la conversación, se lee.
+    """
+    automaticos = config.get("remitentes_automaticos") or []
+
+    def es_automatico(correo: str) -> bool:
+        dominio = correo.rpartition("@")[2].lower()
+        return any(dominio == d or dominio.endswith("." + d) for d in automaticos)
+
+    return not all(es_automatico(m["de"]) for m in hilo["mensajes"])
 
 
 def procesar(pedido: dict, config: dict, agenda_del_dia: list | None = None,

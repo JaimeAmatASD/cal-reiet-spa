@@ -30,12 +30,17 @@ pytest
 ### Cómo lo llama n8n
 
 n8n corre en JavaScript y esto es Python. Se hablan por línea de comandos: entra un
-JSON, sale un JSON. Dos comandos:
+JSON, sale un JSON. Tres comandos:
 
 ```bash
+echo '{"hilo": {...}}'                                   | python src/cli.py hay_que_leer
 echo '{"pedido": {...}, "agenda": [...]}'                | python src/cli.py procesar
 echo '{"ficha": {...}, "inicio": "12:15", "salas": [...]}' | python src/cli.py peticion
 ```
+
+`hay_que_leer` dice si la conversación pasa por la IA. Los avisos automáticos
+—los remitentes de `remitentes_automaticos` en `config/casa.yaml`— se dejan
+afuera antes de leerlos, sin gastar saldo y sin fila en la hoja.
 
 `procesar` dice qué hacer con un pedido. Si no le pasás la agenda del día, contesta
 `falta_agenda` con la fecha: n8n la busca en el calendario y vuelve a llamar.

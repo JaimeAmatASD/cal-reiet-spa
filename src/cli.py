@@ -6,8 +6,12 @@ puerto abierto y sin una dependencia más que se pueda caer.
 
 Se usa así, y así es como lo llama el nodo «Execute Command» de n8n:
 
+    echo '{"hilo": {...}}' | python src/cli.py hay_que_leer
     echo '{"pedido": {...}, "agenda": [...]}' | python src/cli.py procesar
     echo '{"ficha": {...}, "inicio": "12:15", "salas": ["sala_2"]}' | python src/cli.py peticion
+
+`hay_que_leer` dice si la conversación pasa por la IA o es un aviso
+automático que se deja afuera sin gastar saldo.
 
 `procesar` dice qué hacer con un pedido. Si la agenda del día no viene, la
 respuesta es `falta_agenda` con la fecha: n8n va a buscarla al calendario y
@@ -48,7 +52,12 @@ def armar_peticion(entrada: dict, config: dict) -> dict:
         entrada["ficha"], entrada["inicio"], entrada["salas"], config)}
 
 
-COMANDOS = {"procesar": procesar, "peticion": armar_peticion}
+def hay_que_leer(entrada: dict, config: dict) -> dict:
+    return {"leer": flujo.hay_que_leer(entrada["hilo"], config)}
+
+
+COMANDOS = {"hay_que_leer": hay_que_leer, "procesar": procesar,
+            "peticion": armar_peticion}
 
 
 def main(argv: list) -> int:
