@@ -42,3 +42,23 @@ def test_se_leen_las_agendas_de_todas_las_salas_antes_de_seguir():
         if destino["node"] not in agendas
     ]
     assert len(salidas_afuera) == 1, salidas_afuera
+
+
+PROBADOR = FLUJO.parent / "probador-lectura.json"
+
+
+def test_el_probador_lee_igual_que_el_recorrido_del_buzon():
+    # El probador mide cuánto acierta la lectura del buzón. Si sus instrucciones
+    # o su modelo se separan de las del recorrido, mide otra cosa y nadie se entera.
+    buzon = {p["name"]: p for p in _pasos()}
+    probador = {p["name"]: p for p in json.loads(PROBADOR.read_text(encoding="utf-8"))["nodes"]}
+    for nombre in ("Leer el correo", "Modelo Gemini", "Armar el pedido"):
+        assert probador[nombre]["parameters"] == buzon[nombre]["parameters"], nombre
+        assert probador[nombre]["type"] == buzon[nombre]["type"], nombre
+
+    # Lo que «Armar el hilo» le deja a la lectura también tiene que ser lo mismo.
+    for linea in ('duraciones: "40, 60, 90"',
+                  'texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join("\\n\\n---\\n\\n")'):
+        de_probador = linea.replace("mensajes.map", "hilo.mensajes.map")
+        assert linea in buzon["Armar el hilo"]["parameters"]["jsCode"]
+        assert de_probador in probador["Armar el hilo"]["parameters"]["jsCode"]

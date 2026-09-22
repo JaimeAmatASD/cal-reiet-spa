@@ -1,0 +1,24 @@
+descripcion: >-
+  Pedido real, anonimizado. Huésped que da todo en un solo mensaje: duración,
+  día, franja, personas y habitación.
+
+hilo:
+  id: real-01
+  asunto: Reserva masaje
+  mensajes:
+    - de: n.ferrer@ejemplo.com
+      nombre: Nuria Ferrer
+      texto: |
+        Hola, soy Nuria Ferrer, habitación 9. Quería reservar un masaje de 60
+        minutos para el jueves 17 de septiembre por la tarde, para una persona.
+        Gracias.
+
+# Lo que una persona saca de este correo. Contra esto se mide la lectura de la IA.
+espera:
+  salida: completo
+  idioma: es
+  habitacion: "9"
+  duracion: 60
+  fecha: "2026-09-17"
+  franja: tarde
+  personas: 1

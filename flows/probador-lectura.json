@@ -1,0 +1,197 @@
+{
+  "updatedAt": "2026-09-22T22:34:50.000Z",
+  "createdAt": "2026-09-22T22:34:44.787Z",
+  "id": "calreietProbador",
+  "name": "Cal Reiet - probador de lecturas",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "probador-lectura",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "f775ba21-ac13-42f7-a0da-64a2819fe046",
+      "name": "Pedido de prueba",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "b8914103-3d34-44d1-9e56-14bee5663ab6"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Puerta de prueba: el hilo llega ya armado desde src/probador.py, con la\n// fecha en que entró el correo para que «el jueves» se entienda como entonces.\n// Deja lo mismo que el «Armar el hilo» del recorrido del buzón, con el mismo\n// nombre, para que la lectura use las mismas instrucciones sin tocarlas.\nconst { hilo, fecha_hoy } = $json.body;\nreturn [{ json: {\n  hilo,\n  fecha_hoy: fecha_hoy || new Date().toISOString().slice(0, 10),\n  duraciones: \"40, 60, 90\",\n  texto_hilo: hilo.mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
+      },
+      "id": "a7e034fe-8f4d-4189-9062-fec670147e07",
+      "name": "Armar el hilo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $('Armar el hilo').first().json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $('Armar el hilo').first().json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Sé estricto con \"dicho\". Si el cliente escribe \"el viernes\" y vos ponés una fecha, eso es \"deducido\". Si escribe \"para los dos\" y ponés 2 personas, eso es \"deducido\". Ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si quiere reservar, \"pregunta\" si solo pregunta por precios u horarios, y \"derivar\" si es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $('Armar el hilo').first().json.texto_hilo }}",
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        440,
+        0
+      ],
+      "id": "324dde3f-c170-4a36-9f19-980aba27f62d",
+      "name": "Leer el correo"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        200
+      ],
+      "id": "1d091adc-f958-4942-b185-b16c9653e636",
+      "name": "Modelo Gemini",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "iL8VoEebuBcseIEl",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Junta el hilo con lo que entendió el modelo y arma lo que come nuestro código.\nconst crudo = $json.text ?? $json.response?.text ?? JSON.stringify($json);\nconst limpio = String(crudo).replace(/^```(json)?/i, \"\").replace(/```$/, \"\").trim();\nlet lectura;\ntry { lectura = JSON.parse(limpio); }\ncatch (e) { throw new Error(\"El modelo no devolvió un JSON válido: \" + limpio.slice(0, 300)); }\nconst hilo = $('Armar el hilo').first().json.hilo;\nreturn [{ json: { entrada: { pedido: { origen: \"buzon\", hilo, lectura } } } }];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "8f4ef9a0-ab50-4d93-a43d-466730a6f939",
+      "name": "Armar el pedido"
+    },
+    {
+      "parameters": {
+        "respondWith": "firstIncomingItem",
+        "options": {}
+      },
+      "id": "9028d01e-2964-462d-819a-85baffb6e0eb",
+      "name": "Devolver la lectura",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        880,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Pedido de prueba": {
+      "main": [
+        [
+          {
+            "node": "Armar el hilo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el hilo": {
+      "main": [
+        [
+          {
+            "node": "Leer el correo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Modelo Gemini": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Leer el correo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Leer el correo": {
+      "main": [
+        [
+          {
+            "node": "Armar el pedido",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Armar el pedido": {
+      "main": [
+        [
+          {
+            "node": "Devolver la lectura",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "nodeGroups": [],
+  "pinData": null,
+  "versionId": "b8f26aeb-b5b3-4e03-8c9b-d64a56679598",
+  "activeVersionId": "b8f26aeb-b5b3-4e03-8c9b-d64a56679598",
+  "versionCounter": 1,
+  "triggerCount": 1,
+  "sourceWorkflowId": null,
+  "tags": [],
+  "shared": [
+    {
+      "updatedAt": "2026-09-22T22:34:44.794Z",
+      "createdAt": "2026-09-22T22:34:44.794Z",
+      "role": "workflow:owner",
+      "workflowId": "calreietProbador",
+      "projectId": "0HIMSvwcg54EB4ZV",
+      "project": {
+        "updatedAt": "2026-09-11T13:16:00.392Z",
+        "createdAt": "2026-09-08T19:12:49.652Z",
+        "id": "0HIMSvwcg54EB4ZV",
+        "name": "Cal Reiet james <calreiet.lab@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "customTelemetryTags": [],
+        "creatorId": "a0c0e7a1-4ceb-47b6-bf38-94f307d0c8a9"
+      }
+    }
+  ],
+  "versionMetadata": {
+    "name": null,
+    "description": null
+  }
+}
