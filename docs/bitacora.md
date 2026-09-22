@@ -7,6 +7,34 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-22 — Fase 1, paso 5: la fila llega a la hoja dentro del recorrido
+
+**Qué se hizo.** El recorrido va ahora de punta a punta dentro de n8n: entra el correo,
+se apartan los avisos automáticos antes de que los lea la IA, se miran las agendas de
+las dos salas y la decisión queda anotada en la hoja de registro. Si el mismo cliente
+vuelve a escribir, la fila no se duplica: se pone al día.
+
+**Estado.** Terminado el tramo del correo a la fila. Faltan los pedidos reales
+anonimizados y el reporte semanal.
+
+**Decisiones.** Ninguna de peso.
+
+**Se rompió algo.** Dos fallos que no daban error y por eso costaron caro, los dos en
+`lessons.md`: un día con la sala vacía frenaba el recorrido antes de decidir —justo el
+día en que hay hueco—, y las dos salas se miraban a la vez, así que la decisión salía
+leyendo solo la Sala 1. Quedó una prueba que mira el archivo del flujo para que no
+vuelvan.
+
+**Lo que sigue abierto.** El permiso de Google seguía en modo prueba y caducaba
+alrededor del 18; hay que comprobarlo antes de la próxima prueba con correos. Siguen
+escritas a mano dentro del flujo las duraciones y los identificadores de las agendas.
+`casa.yaml` sigue contradiciéndose con la hora de cierre.
+
+**Próximo paso.** Fase 1, paso 6: veinte pedidos reales anonimizados y medir en cuántos
+acierta.
+
+---
+
 ## 2026-09-13 — Fase 1, paso 3: del correo a la ficha, de punta a punta
 
 **Qué se hizo.** El recorrido anda entero con correos de verdad del buzón del

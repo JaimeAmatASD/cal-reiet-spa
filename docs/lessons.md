@@ -42,6 +42,8 @@ consejo en vez de como prohibición.
 - **verificación** — Gemini decía «demasiadas consultas» y la causa real, más abajo en el mismo error, era «se acabó el saldo». Esperar o espaciar las pruebas no habría arreglado nada. El título de un error no es el diagnóstico: se lee el mensaje entero antes de proponer una salida.
 - **agentes** — n8n lanzado como tarea de fondo de la sesión de Claude se apaga cuando la máquina anda corta de memoria, porque la sesión corta sus tareas. Se lanza aparte, desprendido de la sesión (`setsid nohup`), o lo arranca James en su propia terminal.
 - **datos** — Antes de plantear una duda para Egi, buscarla en `convenciones.md`. Se estuvo por preguntar en qué idioma va la petición al grupo y ya estaba escrito: siempre en inglés.
+- **estructura** — En n8n, un paso que devuelve cero cosas frena el recorrido sin error: la corrida figura «terminada bien» y no pasa nada más. Las agendas de las salas vacías ese día cortaban el flujo antes de decidir y de anotar la fila, justo el caso en que hay hueco. Los pasos que pueden venir vacíos se marcan para seguir igual (`alwaysOutputData`). Una corrida «bien» se confirma mirando hasta qué paso llegó, no el estado.
+- **estructura** — En n8n, dos ramas que salen del mismo paso no corren a la par: termina todo el recorrido por la primera antes de empezar la segunda. Las agendas de las dos salas estaban en ramas paralelas y, una vez que la primera dejó de cortarse, la decisión salió leyendo solo la sala 1, sin error (el paso siguiente toma la sala que falta como vacía). Lo que tiene que juntarse antes de seguir va en fila, y los pasos de más adelante se marcan para correr una sola vez (`executeOnce`).
 
 <!-- completar: los errores que te hagan perder una tarde -->
 
