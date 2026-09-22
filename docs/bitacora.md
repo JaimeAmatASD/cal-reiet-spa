@@ -7,6 +7,26 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-23 — El permiso de Google deja de caducar
+
+**Qué se hizo.** El permiso de Google del laboratorio pasó de modo prueba a producción:
+ya no se corta cada siete días. Para eso Google pedía una página de privacidad en la
+raíz de un dominio propio, así que la página se mudó a `jaimeamatasd.github.io`, un
+repositorio aparte, y salió de este proyecto.
+
+**Estado.** Hecho. Queda pendiente pasar este repositorio a privado: sigue público.
+Se revisó todo su historial y no hay claves ni contraseñas; sí están los
+identificadores de la hoja y de las dos agendas del laboratorio, que no dan acceso
+por sí solos.
+
+**Decisiones.** Ninguna de peso.
+
+**Se rompió algo.** No.
+
+**Próximo paso.** Fase 1, paso 6: veinte pedidos reales anonimizados.
+
+---
+
 ## 2026-09-22 — Fase 1, paso 5: la fila llega a la hoja dentro del recorrido
 
 **Qué se hizo.** El recorrido va ahora de punta a punta dentro de n8n: entra el correo,
