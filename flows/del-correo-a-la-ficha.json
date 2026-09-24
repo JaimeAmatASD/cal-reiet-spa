@@ -1,6 +1,6 @@
 [
   {
-    "updatedAt": "2026-09-16T14:40:26.138Z",
+    "updatedAt": "2026-09-22T22:50:24.636Z",
     "createdAt": "2026-09-11T14:28:23.426Z",
     "id": "21Tm5a38Cv2kh6MQ",
     "name": "Cal Reiet - del correo a la hoja",
@@ -64,7 +64,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Deja el hilo con la forma que espera nuestro código: id, asunto y mensajes.\n// \"Traer el hilo entero\" entrega un ítem por mensaje, con el cuerpo codificado\n// dentro de payload. Del correo solo se toma quién escribe y qué escribió.\nconst decodificar = (data, charset) => {\n  const bytes = Buffer.from(String(data).replace(/-/g, \"+\").replace(/_/g, \"/\"), \"base64\");\n  return /8859-1|latin1|windows-1252/i.test(charset || \"\") ? bytes.toString(\"latin1\") : bytes.toString(\"utf8\");\n};\nconst charsetDe = (tipo) => (String(tipo || \"\").match(/charset=\"?([^\";\\s]+)/i) || [])[1];\nconst cabecera = (parte, nombre) =>\n  (parte.headers || []).find(h => h.name.toLowerCase() === nombre.toLowerCase())?.value;\n// Busca la primera parte del tipo pedido, recorriendo las partes anidadas.\nconst buscar = (parte, tipo, tipoRaiz) => {\n  if (!parte) return \"\";\n  if (parte.mimeType === tipo && parte.body?.data) {\n    return decodificar(parte.body.data, charsetDe(cabecera(parte, \"Content-Type\") || tipoRaiz));\n  }\n  for (const p of parte.parts || []) {\n    const t = buscar(p, tipo, tipoRaiz);\n    if (t) return t;\n  }\n  return \"\";\n};\nconst sinHtml = (html) => html\n  .replace(/<(style|script)[\\s\\S]*?<\\/\\1>/gi, \"\")\n  .replace(/<br\\s*\\/?>|<\\/p>|<\\/div>/gi, \"\\n\")\n  .replace(/<[^>]+>/g, \"\")\n  .replace(/&nbsp;/g, \" \").replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n  .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nconst items = $input.all().map(i => i.json);\nconst mensajes = items.map(m => {\n  const de = m.From || \"\";\n  const correo = (de.match(/<([^>]+)>/) || [])[1] || de.trim();\n  const tipoRaiz = m[\"Content-Type\"];\n  const texto = buscar(m.payload, \"text/plain\", tipoRaiz)\n    || sinHtml(buscar(m.payload, \"text/html\", tipoRaiz))\n    || m.snippet || \"\";\n  return {\n    de: correo,\n    nombre: de.replace(/<.*>/, \"\").replace(/\"/g, \"\").trim(),\n    texto: texto.trim(),\n    // Hora universal del correo. Nuestro código se queda con la del primero.\n    fecha: m.internalDate ? new Date(Number(m.internalDate)).toISOString() : \"\",\n  };\n});\nconst hoy = new Date().toISOString().slice(0, 10);\nreturn [{ json: {\n  hilo: { id: items[0]?.threadId || items[0]?.id, asunto: items[0]?.Subject || \"\", mensajes },\n  fecha_hoy: hoy,\n  duraciones: \"40, 60, 90\",\n  texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
+          "jsCode": "// Puerta de prueba: un pedido de tests/fixtures/ llega ya armado desde\n// src/probador_recorrido.py, sin pasar por el buzón. Su número de hilo lleva\n// «prueba-» delante para que la fila se distinga en la hoja de las de verdad.\nconst prueba = $input.first().json.prueba;\nif (prueba) {\n  const hilo = { ...prueba.hilo, id: `prueba-${prueba.hilo.id}` };\n  return [{ json: {\n    hilo,\n    fecha_hoy: prueba.fecha_hoy || new Date().toISOString().slice(0, 10),\n    duraciones: \"40, 60, 90\",\n    texto_hilo: hilo.mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n  }}];\n}\n\n// Deja el hilo con la forma que espera nuestro código: id, asunto y mensajes.\n// \"Traer el hilo entero\" entrega un ítem por mensaje, con el cuerpo codificado\n// dentro de payload. Del correo solo se toma quién escribe y qué escribió.\nconst decodificar = (data, charset) => {\n  const bytes = Buffer.from(String(data).replace(/-/g, \"+\").replace(/_/g, \"/\"), \"base64\");\n  return /8859-1|latin1|windows-1252/i.test(charset || \"\") ? bytes.toString(\"latin1\") : bytes.toString(\"utf8\");\n};\nconst charsetDe = (tipo) => (String(tipo || \"\").match(/charset=\"?([^\";\\s]+)/i) || [])[1];\nconst cabecera = (parte, nombre) =>\n  (parte.headers || []).find(h => h.name.toLowerCase() === nombre.toLowerCase())?.value;\n// Busca la primera parte del tipo pedido, recorriendo las partes anidadas.\nconst buscar = (parte, tipo, tipoRaiz) => {\n  if (!parte) return \"\";\n  if (parte.mimeType === tipo && parte.body?.data) {\n    return decodificar(parte.body.data, charsetDe(cabecera(parte, \"Content-Type\") || tipoRaiz));\n  }\n  for (const p of parte.parts || []) {\n    const t = buscar(p, tipo, tipoRaiz);\n    if (t) return t;\n  }\n  return \"\";\n};\nconst sinHtml = (html) => html\n  .replace(/<(style|script)[\\s\\S]*?<\\/\\1>/gi, \"\")\n  .replace(/<br\\s*\\/?>|<\\/p>|<\\/div>/gi, \"\\n\")\n  .replace(/<[^>]+>/g, \"\")\n  .replace(/&nbsp;/g, \" \").replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n  .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nconst items = $input.all().map(i => i.json);\nconst mensajes = items.map(m => {\n  const de = m.From || \"\";\n  const correo = (de.match(/<([^>]+)>/) || [])[1] || de.trim();\n  const tipoRaiz = m[\"Content-Type\"];\n  const texto = buscar(m.payload, \"text/plain\", tipoRaiz)\n    || sinHtml(buscar(m.payload, \"text/html\", tipoRaiz))\n    || m.snippet || \"\";\n  return {\n    de: correo,\n    nombre: de.replace(/<.*>/, \"\").replace(/\"/g, \"\").trim(),\n    texto: texto.trim(),\n    // Hora universal del correo. Nuestro código se queda con la del primero.\n    fecha: m.internalDate ? new Date(Number(m.internalDate)).toISOString() : \"\",\n  };\n});\nconst hoy = new Date().toISOString().slice(0, 10);\nreturn [{ json: {\n  hilo: { id: items[0]?.threadId || items[0]?.id, asunto: items[0]?.Subject || \"\", mensajes },\n  fecha_hoy: hoy,\n  duraciones: \"40, 60, 90\",\n  texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -191,13 +191,13 @@
         ],
         "id": "agenda-sala_1",
         "name": "Agenda sala_1",
+        "alwaysOutputData": true,
         "credentials": {
           "googleCalendarOAuth2Api": {
             "id": "ruuuZgOhZ5cp9gCj",
             "name": "Google Calendar account"
           }
-        },
-        "alwaysOutputData": true
+        }
       },
       {
         "parameters": {
@@ -216,19 +216,19 @@
         "type": "n8n-nodes-base.googleCalendar",
         "typeVersion": 1.3,
         "position": [
-          2220,
+          2224,
           192
         ],
         "id": "agenda-sala_2",
         "name": "Agenda sala_2",
+        "alwaysOutputData": true,
+        "executeOnce": true,
         "credentials": {
           "googleCalendarOAuth2Api": {
             "id": "ruuuZgOhZ5cp9gCj",
             "name": "Google Calendar account"
           }
-        },
-        "alwaysOutputData": true,
-        "executeOnce": true
+        }
       },
       {
         "parameters": {
@@ -499,6 +499,19 @@
             "name": "Google Sheets account"
           }
         }
+      },
+      {
+        "parameters": {
+          "inputSource": "passthrough"
+        },
+        "type": "n8n-nodes-base.executeWorkflowTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          224,
+          528
+        ],
+        "id": "db70f3fe-acbd-45fb-9629-da67da8f57d2",
+        "name": "Llega de prueba"
       }
     ],
     "connections": {
@@ -725,6 +738,17 @@
             }
           ]
         ]
+      },
+      "Llega de prueba": {
+        "main": [
+          [
+            {
+              "node": "Armar el hilo",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "settings": {
@@ -737,9 +761,9 @@
     },
     "nodeGroups": [],
     "pinData": {},
-    "versionId": "160fc451-cf4c-499b-a940-cda5be0e6983",
+    "versionId": "5612e2d8-fab6-45fa-8f76-1f3339e1166e",
     "activeVersionId": null,
-    "versionCounter": 41,
+    "versionCounter": 43,
     "triggerCount": 0,
     "sourceWorkflowId": null,
     "tags": [],

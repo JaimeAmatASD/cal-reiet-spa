@@ -1,0 +1,149 @@
+[
+  {
+    "updatedAt": "2026-09-24T08:18:19.000Z",
+    "createdAt": "2026-09-24T08:18:02.781Z",
+    "id": "calreietRecorrer",
+    "name": "Cal Reiet - probador del recorrido",
+    "description": null,
+    "active": true,
+    "isArchived": false,
+    "nodes": [
+      {
+        "parameters": {
+          "httpMethod": "POST",
+          "path": "probador-recorrido",
+          "responseMode": "responseNode",
+          "options": {}
+        },
+        "id": "3ac9e42c-7106-4bb1-966d-3ce96c1f7add",
+        "name": "Pedido de prueba",
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "position": [
+          0,
+          0
+        ],
+        "webhookId": "7a664d24-8e0d-460a-aeae-021c7eefb465"
+      },
+      {
+        "parameters": {
+          "jsCode": "// Lo que manda src/probador_recorrido.py: el hilo ya armado y el día en que\n// entró. Va tal cual a la puerta de prueba del recorrido del buzón.\nreturn [{ json: { prueba: $json.body.prueba } }];"
+        },
+        "id": "fa510040-f70a-41e5-8aff-2bdd96088aee",
+        "name": "Sacar el pedido",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          220,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "workflowId": {
+            "__rl": true,
+            "value": "21Tm5a38Cv2kh6MQ",
+            "mode": "id"
+          },
+          "options": {
+            "waitForSubWorkflow": true
+          }
+        },
+        "id": "f0a78ee9-daa8-47b8-9176-db1f99615f10",
+        "name": "Pasar por el recorrido",
+        "type": "n8n-nodes-base.executeWorkflow",
+        "typeVersion": 1.2,
+        "position": [
+          440,
+          0
+        ]
+      },
+      {
+        "parameters": {
+          "respondWith": "allIncomingItems",
+          "options": {}
+        },
+        "id": "496dc9ea-37a0-4ad4-af5f-978b30cc3bf0",
+        "name": "Devolver cómo terminó",
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.1,
+        "position": [
+          660,
+          0
+        ]
+      }
+    ],
+    "connections": {
+      "Pedido de prueba": {
+        "main": [
+          [
+            {
+              "node": "Sacar el pedido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Sacar el pedido": {
+        "main": [
+          [
+            {
+              "node": "Pasar por el recorrido",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Pasar por el recorrido": {
+        "main": [
+          [
+            {
+              "node": "Devolver cómo terminó",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "settings": {
+      "executionOrder": "v1"
+    },
+    "staticData": null,
+    "meta": null,
+    "nodeGroups": [],
+    "pinData": null,
+    "versionId": "a8b34b92-cf10-4aa7-850d-9730fd33e6ef",
+    "activeVersionId": "a8b34b92-cf10-4aa7-850d-9730fd33e6ef",
+    "versionCounter": 1,
+    "triggerCount": 0,
+    "sourceWorkflowId": null,
+    "tags": [],
+    "shared": [
+      {
+        "updatedAt": "2026-09-24T08:18:02.787Z",
+        "createdAt": "2026-09-24T08:18:02.787Z",
+        "role": "workflow:owner",
+        "workflowId": "calreietRecorrer",
+        "projectId": "0HIMSvwcg54EB4ZV",
+        "project": {
+          "updatedAt": "2026-09-11T13:16:00.392Z",
+          "createdAt": "2026-09-08T19:12:49.652Z",
+          "id": "0HIMSvwcg54EB4ZV",
+          "name": "Cal Reiet james <calreiet.lab@gmail.com>",
+          "type": "personal",
+          "icon": null,
+          "description": null,
+          "customTelemetryTags": [],
+          "creatorId": "a0c0e7a1-4ceb-47b6-bf38-94f307d0c8a9"
+        }
+      }
+    ],
+    "versionMetadata": {
+      "name": null,
+      "description": null
+    }
+  }
+]

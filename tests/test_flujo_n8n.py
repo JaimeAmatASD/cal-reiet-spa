@@ -62,3 +62,76 @@ def test_el_probador_lee_igual_que_el_recorrido_del_buzon():
         de_probador = linea.replace("mensajes.map", "hilo.mensajes.map")
         assert linea in buzon["Armar el hilo"]["parameters"]["jsCode"]
         assert de_probador in probador["Armar el hilo"]["parameters"]["jsCode"]
+
+
+# --- La puerta de prueba del recorrido entero ---------------------------------
+#
+# Los pedidos de `tests/fixtures/` pueden recorrer el camino completo —IA,
+# agendas y hoja— sin mandar un correo. Entran por una puerta propia justo antes
+# de «Armar el hilo», así que todo lo que viene después es exactamente lo mismo.
+
+import shutil
+import subprocess
+
+PROBADOR_RECORRIDO = FLUJO.parent / "probador-recorrido.json"
+
+
+def _flujo():
+    datos = json.loads(FLUJO.read_text(encoding="utf-8"))
+    return datos[0] if isinstance(datos, list) else datos
+
+
+def _armar_el_hilo(entrada: dict) -> dict:
+    """Corre el código de «Armar el hilo» como lo corre n8n, con una sola entrada."""
+    codigo = {p["name"]: p for p in _pasos()}["Armar el hilo"]["parameters"]["jsCode"]
+    programa = (
+        "const $input = { all: () => [{ json: ENTRADA }], first: () => ({ json: ENTRADA }) };\n"
+        "const ENTRADA = " + json.dumps(entrada) + ";\n"
+        "const salida = (() => {\n" + codigo + "\n})();\n"
+        "process.stdout.write(JSON.stringify(salida[0].json));\n"
+    )
+    node = shutil.which("node")
+    assert node, "Hace falta node para correr el código de n8n"
+    hecho = subprocess.run([node, "-e", programa], capture_output=True, text=True, check=True)
+    return json.loads(hecho.stdout)
+
+
+def test_la_puerta_de_prueba_entra_por_armar_el_hilo():
+    datos = _flujo()
+    puertas = [p["name"] for p in datos["nodes"]
+               if p["type"] == "n8n-nodes-base.executeWorkflowTrigger"]
+    assert len(puertas) == 1, puertas
+    destinos = [d["node"] for rama in datos["connections"][puertas[0]]["main"] for d in rama]
+    assert destinos == ["Armar el hilo"]
+
+
+def test_un_pedido_de_prueba_sale_marcado_para_distinguirlo_en_la_hoja():
+    # La fila de una prueba va a la misma hoja que las de verdad. Tiene que
+    # poder reconocerse de un vistazo para no contarla con los pedidos reales.
+    hilo = {"id": "real-01", "asunto": "Reserva masaje",
+            "mensajes": [{"de": "n.ferrer@ejemplo.com", "nombre": "Nuria Ferrer",
+                          "texto": "Masaje de 60 el jueves por la tarde."}]}
+    salida = _armar_el_hilo({"prueba": {"hilo": hilo, "fecha_hoy": "2026-09-14"}})
+    assert salida["hilo"]["id"] == "prueba-real-01"
+    assert salida["hilo"]["mensajes"] == hilo["mensajes"]
+    assert salida["fecha_hoy"] == "2026-09-14"
+    assert salida["duraciones"] == "40, 60, 90"
+    assert salida["texto_hilo"] == "De: n.ferrer@ejemplo.com\nMasaje de 60 el jueves por la tarde."
+
+
+def test_un_correo_del_buzon_no_sale_marcado_como_prueba():
+    correo = {"id": "m1", "threadId": "1a0c9698894046e9", "Subject": "Masaje",
+              "From": "Ana <ana@ejemplo.com>", "snippet": "Hola, un masaje",
+              "internalDate": "1790000000000", "payload": {}}
+    salida = _armar_el_hilo(correo)
+    assert salida["hilo"]["id"] == "1a0c9698894046e9"
+
+
+def test_el_probador_del_recorrido_llama_al_recorrido_del_buzon():
+    probador = json.loads(PROBADOR_RECORRIDO.read_text(encoding="utf-8"))
+    if isinstance(probador, list):
+        probador = probador[0]
+    pasos = {p["type"]: p for p in probador["nodes"]}
+    llamada = pasos["n8n-nodes-base.executeWorkflow"]["parameters"]
+    assert llamada["workflowId"]["value"] == _flujo()["id"]
+    assert pasos["n8n-nodes-base.webhook"]["parameters"]["path"] == "probador-recorrido"

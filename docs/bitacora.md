@@ -7,6 +7,35 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-09-24 — Fase 1: la hoja recibe su primera fila, y los pedidos de prueba entran solos
+
+**Qué se hizo.** La hoja de registro nunca había recibido una fila: la fila de títulos
+estaba rota y el recorrido se cortaba justo al final. Se rehízo. Además, los pedidos de
+prueba ya no hace falta mandarlos por correo: entran por una puerta propia y recorren el
+camino entero —lectura, agendas de las salas y hoja— con un solo comando. Y el recorrido
+del buzón quedó encendido: cada correo que llega al laboratorio se procesa solo.
+
+**Estado.** Probado con un pedido: entró, llegó a la hoja completo, y al repetirlo la
+fila se puso al día sin duplicarse. Un aviso de Google llegó al buzón en el medio y el
+recorrido lo dejó afuera solo, como debe. Las filas de prueba llevan el número
+empezando por «prueba-», con la hora de entrada vacía, y hay que borrarlas antes de
+contar nada real.
+
+**Decisiones.** James decidió encender el recorrido del buzón (hasta ahora se corría con
+el botón). Hacía falta para la puerta de prueba y es a lo que apunta la fase 1.
+
+**Se rompió algo.** Sí, cuatro cosas, en `lessons.md`: el tramo de la hoja se había dado
+por terminado el 22 sin haber visto una fila; se trabajó tres veces sobre una copia de la
+hoja creyendo que era la buena; y se repitieron dos errores que ya estaban anotados
+(apagar n8n con una orden que se corta a sí misma, y arrancarlo atado a la sesión, que
+lo apaga cuando falta memoria). Los permisos de Gmail, Calendar y Sheets caducaron y se
+reconectaron: eran de la época de prueba; ya no deberían volver a caducar.
+
+**Próximo paso.** Fase 1, paso 6: cargar los veinte pedidos reales anonimizados y
+pasarlos por las dos pruebas, la de lectura y la del recorrido entero.
+
+---
+
 ## 2026-09-23 — El permiso de Google deja de caducar
 
 **Qué se hizo.** El permiso de Google del laboratorio pasó de modo prueba a producción:
@@ -36,6 +65,9 @@ vuelve a escribir, la fila no se duplica: se pone al día.
 
 **Estado.** Terminado el tramo del correo a la fila. Faltan los pedidos reales
 anonimizados y el reporte semanal.
+
+> **Corrección del 2026-09-24:** no estaba terminado. Ninguna fila había llegado a la
+> hoja; se arregló el 24. Ver esa entrada.
 
 **Decisiones.** Ninguna de peso.
 
