@@ -1,0 +1,17 @@
+descripcion: >-
+  Inventado. Embarazo: sale derivada a una persona y no se guarda nada.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-06
+  asunto: Masaje
+  mensajes:
+    - de: clara.roig@ejemplo.com
+      nombre: Clara Roig
+      texto: |
+        Hola, estoy embarazada de cinco meses. ¿Puedo hacerme un masaje de 60
+        minutos el jueves 1 de octubre por la mañana? Habitación 8.
+
+espera:
+  salida: derivar

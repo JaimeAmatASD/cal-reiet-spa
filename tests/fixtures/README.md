@@ -1,6 +1,9 @@
 # Peticiones de prueba
 
-Las veinte peticiones reales **anonimizadas** de la fase 1, paso 6.
+Las veinte peticiones de la fase 1, paso 6. Solo `real-01` es un pedido real
+anonimizado; las `inventado-*` las escribimos nosotros, a pedido de James, para
+no esperar a juntar los reales. Miden menos: quien las escribió sabe qué busca
+el sistema.
 
 Antes de que un correo entre acá se le cambian nombre, mail y teléfono. Son
 datos de personas y la cuenta del laboratorio es personal.

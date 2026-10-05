@@ -41,7 +41,7 @@ def comparar(caso: dict, lectura: dict, config: dict) -> list[dict]:
         leido["habitacion"] = None if habitacion is None else str(habitacion)
 
     # Una consulta derivada no tiene ficha que comparar: basta con que se derive.
-    if espera["salida"] == "derivar" and resultado["salida"] == "derivar":
+    if espera.get("salida") == "derivar" and resultado["salida"] == "derivar":
         return []
 
     return [{"campo": campo, "esperado": esperado, "leido": leido.get(campo)}

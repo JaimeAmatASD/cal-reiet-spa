@@ -1,0 +1,37 @@
+descripcion: >-
+  Inventado. Conversación de cuatro mensajes: el cliente cambia la franja en
+  el último. Vale lo último que dijo.
+
+recibido: "2026-09-29"
+
+hilo:
+  id: inventado-09
+  asunto: "Re: Masaje viernes"
+  mensajes:
+    - de: pablo.serra@ejemplo.com
+      nombre: Pablo Serra
+      texto: |
+        Hola, habitación 6. Un masaje de 60 minutos el viernes 2 de octubre por
+        la tarde, para dos.
+    - de: wellbeing@ejemplo.com
+      nombre: Wellbeing
+      texto: |
+        Hola Pablo, lo miramos y te decimos.
+    - de: pablo.serra@ejemplo.com
+      nombre: Pablo Serra
+      texto: |
+        Perdona, al final por la tarde tenemos excursión. ¿Podría ser por la
+        mañana, mismo día?
+    - de: wellbeing@ejemplo.com
+      nombre: Wellbeing
+      texto: |
+        Sin problema, lo cambiamos.
+
+espera:
+  salida: completo
+  idioma: es
+  habitacion: "6"
+  duracion: 60
+  fecha: "2026-10-02"
+  franja: mañana
+  personas: 2

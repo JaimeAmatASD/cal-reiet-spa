@@ -1,0 +1,23 @@
+descripcion: >-
+  Inventado. "Para mi pareja y para mí": son dos personas aunque no ponga el
+  número.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-10
+  asunto: Masaje en pareja
+  mensajes:
+    - de: elena.font@ejemplo.com
+      nombre: Elena Font
+      texto: |
+        Hola, habitación 10. Queremos un masaje de 90 minutos para mi pareja y
+        para mí, el sábado 3 de octubre por la tarde.
+
+espera:
+  salida: completo
+  habitacion: "10"
+  duracion: 90
+  fecha: "2026-10-03"
+  franja: tarde
+  personas: 2

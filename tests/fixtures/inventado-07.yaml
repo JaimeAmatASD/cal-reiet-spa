@@ -1,0 +1,17 @@
+descripcion: >-
+  Inventado. Lesión de espalda en inglés: derivar.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-07
+  asunto: Deep tissue
+  mensajes:
+    - de: mark.olsen@ejemplo.com
+      nombre: Mark Olsen
+      texto: |
+        Hi, I had a back injury last year and it still bothers me. I'd like a
+        90 minute deep tissue on Saturday 3 October, afternoon. Room 11.
+
+espera:
+  salida: derivar

@@ -1,0 +1,23 @@
+descripcion: >-
+  Inventado. Pide 50 minutos, que no está en el catálogo: la duración no vale
+  y hay que preguntarla.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-05
+  asunto: Reserva
+  mensajes:
+    - de: laura.mir@ejemplo.com
+      nombre: Laura Mir
+      texto: |
+        Hola! Somos de la 15. Queremos un masaje de 50 minutos el domingo 4 de
+        octubre por la tarde, para una persona.
+
+espera:
+  salida: incompleto
+  habitacion: "15"
+  duracion: null
+  fecha: "2026-10-04"
+  franja: tarde
+  personas: 1

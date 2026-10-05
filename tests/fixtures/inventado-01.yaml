@@ -1,0 +1,24 @@
+descripcion: >-
+  Inventado. Huésped que da todo en un mensaje, con la fecha escrita entera.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-01
+  asunto: Masaje sábado
+  mensajes:
+    - de: marta.vidal@ejemplo.com
+      nombre: Marta Vidal
+      texto: |
+        Buenos días, estamos en la habitación 3. Queríamos reservar un masaje
+        de 90 minutos para dos personas el sábado 3 de octubre por la mañana.
+        Muchas gracias.
+
+espera:
+  salida: completo
+  idioma: es
+  habitacion: "3"
+  duracion: 90
+  fecha: "2026-10-03"
+  franja: mañana
+  personas: 2

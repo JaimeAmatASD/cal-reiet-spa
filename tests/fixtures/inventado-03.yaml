@@ -1,0 +1,23 @@
+descripcion: >-
+  Inventado. Falta la duración: pide "un masaje" sin más.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-03
+  asunto: Masaje
+  mensajes:
+    - de: jordi.pons@ejemplo.com
+      nombre: Jordi Pons
+      texto: |
+        Hola, habitación 12. ¿Podría ser un masaje el viernes 2 de octubre por
+        la tarde? Solo para mí.
+
+espera:
+  salida: incompleto
+  idioma: es
+  habitacion: "12"
+  duracion: null
+  fecha: "2026-10-02"
+  franja: tarde
+  personas: 1

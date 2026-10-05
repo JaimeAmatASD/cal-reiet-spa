@@ -5,6 +5,23 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-10-05 — Qué cuenta como dicho: la fecha con día y mes, lo traducido y las personas
+
+**Contexto**: la primera medición con los veinte pedidos de prueba dio 11 de 20. En siete
+fallos la IA había leído bien los cuatro datos, pero marcó como deducido lo que el
+cliente escribió con todas las letras («Tuesday 6 October», «nachmittags»). Por la
+decisión del 2026-09-08 eso dejaba la ficha incompleta y se le habría vuelto a preguntar
+al cliente algo que ya dijo.
+**Alternativas**: dejar la regla estricta y aceptar las vueltas de correo de más.
+**Elegido** (James): una fecha con día y mes escritos es dicha aunque el año lo pongamos
+nosotros; traducir no es deducir; «para los dos», «mi pareja y yo» o «él solo» dicen
+cuántas personas son. Si no dice los minutos, la duración queda vacía y se pregunta.
+«El viernes» a secas sigue siendo deducido. La IA lee con la temperatura en 0.
+**Costo aceptado**: que «para los dos» quiera decir otra cosa. Se cubre en la
+confirmación, que tiene que decir bien claro cuántos masajes son.
+**Se revisa si**: aparece un pedido real agendado para un número de personas o un día
+que el cliente no quiso.
+
 ## 2026-09-11 — Gemini como modelo que lee el correo
 
 **Contexto**: la parte que entiende el correo la hace n8n con su nodo de IA, y hay que

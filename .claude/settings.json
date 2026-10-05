@@ -7,7 +7,7 @@
       "Read(./**/credentials.json)",
       "Read(./**/token.json)",
       "Read(./**/service-account*.json)",
-      "Read(./datos-reales/**)",
+      
       "Bash(git push --force:*)",
       "Bash(rm -rf:*)"
     ]

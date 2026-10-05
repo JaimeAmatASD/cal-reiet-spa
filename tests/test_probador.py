@@ -63,3 +63,10 @@ def test_una_consulta_de_salud_derivada_no_se_compara_campo_por_campo(config):
     caso = {"hilo": CASO["hilo"], "espera": {"salida": "derivar"}}
     lectura = _lectura() | {"senales_salud": True}
     assert probador.comparar(caso, lectura, config) == []
+
+
+def test_un_pedido_sin_salida_anotada_se_compara_igual(config):
+    # El README deja anotar solo algunos campos. Un pedido sin `salida` se caía
+    # antes de comparar nada.
+    caso = {"hilo": CASO["hilo"], "espera": {"duracion": 60, "franja": "tarde"}}
+    assert probador.comparar(caso, _lectura(), config) == []

@@ -1,0 +1,24 @@
+descripcion: >-
+  Inventado. En alemán, idioma que la casa no tiene para contestar. Los datos
+  están todos.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-12
+  asunto: Massage Samstag
+  mensajes:
+    - de: k.weber@ejemplo.com
+      nombre: Klaus Weber
+      texto: |
+        Guten Tag, wir sind in Zimmer 5. Wir möchten am Samstag, den 3. Oktober,
+        nachmittags eine Massage von 60 Minuten für zwei Personen buchen.
+        Vielen Dank.
+
+espera:
+  salida: completo
+  habitacion: "5"
+  duracion: 60
+  fecha: "2026-10-03"
+  franja: tarde
+  personas: 2

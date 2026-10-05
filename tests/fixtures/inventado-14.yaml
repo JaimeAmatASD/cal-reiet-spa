@@ -1,0 +1,22 @@
+descripcion: >-
+  Inventado. Da una hora exacta, "a las 11", en vez de mañana o tarde. Una
+  persona lo pone en la mañana.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-14
+  asunto: Masaje martes
+  mensajes:
+    - de: sara.marti@ejemplo.com
+      nombre: Sara Martí
+      texto: |
+        Hola, habitación 1. ¿Tenéis un masaje de 40 minutos el martes 6 de
+        octubre a las 11? Para una persona.
+
+espera:
+  habitacion: "1"
+  duracion: 40
+  fecha: "2026-10-06"
+  franja: mañana
+  personas: 1

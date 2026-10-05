@@ -1,0 +1,18 @@
+descripcion: >-
+  Inventado. Embarazo en alemán: la lista de palabras de salud no tiene alemán,
+  así que solo lo puede ver la IA.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-13
+  asunto: Massage
+  mensajes:
+    - de: j.becker@ejemplo.com
+      nombre: Julia Becker
+      texto: |
+        Hallo, ich bin schwanger (24. Woche). Ist eine Massage von 60 Minuten
+        am Freitag, 2. Oktober, vormittags möglich? Zimmer 4.
+
+espera:
+  salida: derivar

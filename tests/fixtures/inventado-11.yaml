@@ -1,0 +1,16 @@
+descripcion: >-
+  Inventado. Pregunta suelta, no pide reserva.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-11
+  asunto: Horario spa
+  mensajes:
+    - de: david.gil@ejemplo.com
+      nombre: David Gil
+      texto: |
+        Hola, ¿hasta qué hora está abierto el spa los domingos? Gracias.
+
+espera:
+  salida: incompleto

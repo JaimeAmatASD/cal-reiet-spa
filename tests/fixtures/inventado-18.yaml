@@ -1,0 +1,25 @@
+descripcion: >-
+  Inventado. Lo reenvía recepción de parte de un huésped: el cliente no es
+  quien escribe.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-18
+  asunto: "Fwd: masaje huésped hab. 21"
+  mensajes:
+    - de: recepcion@ejemplo.com
+      nombre: Recepción
+      texto: |
+        Hola equipo, el señor Andreu Coll de la habitación 21 pide un masaje de
+        90 minutos para él solo el domingo 4 de octubre por la mañana.
+        Gracias!
+
+espera:
+  salida: completo
+  idioma: es
+  habitacion: "21"
+  duracion: 90
+  fecha: "2026-10-04"
+  franja: mañana
+  personas: 1

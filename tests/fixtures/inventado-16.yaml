@@ -1,0 +1,30 @@
+descripcion: >-
+  Inventado. Cliente externo en inglés que deja su teléfono en la firma.
+
+recibido: "2026-09-29"
+
+hilo:
+  id: inventado-16
+  asunto: Spa appointment
+  mensajes:
+    - de: emma.clarke@ejemplo.com
+      nombre: Emma Clarke
+      texto: |
+        Good afternoon,
+
+        I'm not a guest at the hotel but a friend recommended your spa. I'd love
+        a 40 minute massage on Monday 5 October, ideally in the morning. Just
+        one person.
+
+        Best wishes,
+        Emma Clarke
+        +44 7700 900000
+
+espera:
+  salida: completo
+  idioma: en
+  habitacion: null
+  duracion: 40
+  fecha: "2026-10-05"
+  franja: mañana
+  personas: 1

@@ -1,0 +1,23 @@
+descripcion: >-
+  Inventado. Grupo de cuatro.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-17
+  asunto: Masajes para cuatro
+  mensajes:
+    - de: ines.prats@ejemplo.com
+      nombre: Inés Prats
+      texto: |
+        Hola, somos cuatro amigas alojadas en las habitaciones 16 y 17. Nos
+        gustaría un masaje de 60 minutos cada una el viernes 2 de octubre por
+        la tarde. ¿Es posible?
+
+espera:
+  salida: completo
+  idioma: es
+  duracion: 60
+  fecha: "2026-10-02"
+  franja: tarde
+  personas: 4

@@ -46,7 +46,8 @@ Un solo objeto. Este, con estos nombres:
 - **`origen`** es una de tres, y nada más:
   - `dicho` — está escrito en el correo, con esas palabras
   - `deducido` — lo interpretamos nosotros. «El viernes» es una fecha, pero es una
-    fecha que pusimos nosotros
+    fecha que pusimos nosotros. Traducir no es deducir, y una fecha con día y mes
+    escritos es `dicho` aunque el año lo pongamos nosotros (2026-10-05)
   - `historial` — sale de un mensaje anterior del mismo hilo, no del último
 - **`intencion`** es una de tres: `reserva`, `pregunta`, `derivar`. Cualquier otra cosa
   se trata como derivar.
@@ -77,6 +78,8 @@ Un solo objeto. Este, con estos nombres:
 Esto es lo que va en el nodo de n8n. **La copia que manda es la de n8n**; esta es la de
 referencia, para saber qué se le pidió cuando algo salga raro.
 
+La IA lee con la temperatura en 0, para que el mismo correo dé la misma lectura.
+
 Lo que va entre llaves lo rellena n8n antes de mandarlo: el hilo completo, la fecha de
 hoy y el catálogo de duraciones de la casa.
 
@@ -100,9 +103,18 @@ Reglas:
    palabras, "deducido" si lo interpretaste vos, "historial" si sale de un
    mensaje anterior del hilo. Si no sabés un campo, omitilo.
 
-2. Sé estricto con "dicho". Si el cliente escribe "el viernes" y vos ponés una
-   fecha, eso es "deducido". Si escribe "para los dos" y ponés 2 personas, eso
-   es "deducido". Ante la duda, "deducido".
+2. Qué es "dicho" y qué es "deducido":
+   - Fecha: si el cliente escribe el día y el mes ("el sábado 3 de octubre",
+     "Tuesday 6 October"), es "dicho", aunque el año lo pongas vos. Si solo dice
+     "el viernes", "mañana" o "la semana que viene" y vos ponés la fecha, es
+     "deducido".
+   - Traducir no es deducir: "nachmittags" es tarde, "in the morning" es mañana,
+     y los dos son "dicho".
+   - Personas: si dice para quiénes es, es "dicho". "Para mi pareja y para mí" o
+     "para los dos" son 2; "para él solo" o "solo para mí" es 1.
+   - Duración: solo si dice los minutos. "Un masaje" sin minutos no lleva
+     duración: omitila, no elijas una por él.
+   - En todo lo demás, ante la duda, "deducido".
 
 3. Poné "senales_salud": true si el cliente menciona cualquier cosa de salud:
    embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al

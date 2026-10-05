@@ -1,11 +1,11 @@
 [
   {
-    "updatedAt": "2026-09-22T22:50:24.636Z",
+    "updatedAt": "2026-10-05T15:36:06.000Z",
     "createdAt": "2026-09-11T14:28:23.426Z",
     "id": "21Tm5a38Cv2kh6MQ",
     "name": "Cal Reiet - del correo a la hoja",
     "description": null,
-    "active": false,
+    "active": true,
     "isArchived": false,
     "nodes": [
       {
@@ -78,7 +78,7 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $('Armar el hilo').first().json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $('Armar el hilo').first().json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Sé estricto con \"dicho\". Si el cliente escribe \"el viernes\" y vos ponés una fecha, eso es \"deducido\". Si escribe \"para los dos\" y ponés 2 personas, eso es \"deducido\". Ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si quiere reservar, \"pregunta\" si solo pregunta por precios u horarios, y \"derivar\" si es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $('Armar el hilo').first().json.texto_hilo }}",
+          "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $('Armar el hilo').first().json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $('Armar el hilo').first().json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Qué es \"dicho\" y qué es \"deducido\":\n   - Fecha: si el cliente escribe el día y el mes (\"el sábado 3 de octubre\", \"Tuesday 6 October\"), es \"dicho\", aunque el año lo pongas vos. Si solo dice \"el viernes\", \"mañana\" o \"la semana que viene\" y vos ponés la fecha, es \"deducido\".\n   - Traducir no es deducir: \"nachmittags\" es tarde, \"in the morning\" es mañana, y los dos son \"dicho\".\n   - Personas: si dice para quiénes es, es \"dicho\". \"Para mi pareja y para mí\" o \"para los dos\" son 2; \"para él solo\" o \"solo para mí\" es 1.\n   - Duración: solo si dice los minutos. \"Un masaje\" sin minutos no lleva duración: omitila, no elijas una por él.\n   - En todo lo demás, ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si quiere reservar, \"pregunta\" si solo pregunta por precios u horarios, y \"derivar\" si es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $('Armar el hilo').first().json.texto_hilo }}",
           "batching": {}
         },
         "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -93,7 +93,9 @@
       {
         "parameters": {
           "modelName": "models/gemini-3.5-flash-lite",
-          "options": {}
+          "options": {
+            "temperature": 0
+          }
         },
         "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
         "typeVersion": 1.1,
@@ -755,16 +757,33 @@
       "executionOrder": "v1",
       "binaryMode": "separate"
     },
-    "staticData": null,
+    "staticData": {
+      "node:Correo nuevo": {
+        "Correo nuevo": {
+          "lastTimeChecked": 1791192827,
+          "pendingMessageIds": [],
+          "possibleDuplicates": [
+            "1a10b698838d9cd8",
+            "1a0fbf67531c24a6",
+            "1a0dbdc3550ebf61",
+            "1a0d2f31833956ea",
+            "1a0d2dd4123f8f95",
+            "1a0d2dcc97927195",
+            "1a0d2dc4f3313fd9",
+            "1a0d2dbe5cf3abf0"
+          ]
+        }
+      }
+    },
     "meta": {
       "templateCredsSetupCompleted": true
     },
     "nodeGroups": [],
     "pinData": {},
-    "versionId": "5612e2d8-fab6-45fa-8f76-1f3339e1166e",
-    "activeVersionId": null,
-    "versionCounter": 43,
-    "triggerCount": 0,
+    "versionId": "e949ead9-6480-44a0-8bb5-40dcf96b9a9e",
+    "activeVersionId": "e949ead9-6480-44a0-8bb5-40dcf96b9a9e",
+    "versionCounter": 44,
+    "triggerCount": 1,
     "sourceWorkflowId": null,
     "tags": [],
     "shared": [

@@ -1,0 +1,21 @@
+descripcion: >-
+  Inventado. Duda entre dos días: el día no está decidido.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-19
+  asunto: Masaje viernes o sábado
+  mensajes:
+    - de: lucia.ramis@ejemplo.com
+      nombre: Lucía Ramis
+      texto: |
+        Hola, habitación 18. Un masaje de 60 minutos por la tarde para una
+        persona, el viernes 2 o el sábado 3 de octubre, lo que tengáis libre.
+
+espera:
+  salida: incompleto
+  habitacion: "18"
+  duracion: 60
+  franja: tarde
+  personas: 1

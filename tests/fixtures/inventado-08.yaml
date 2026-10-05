@@ -1,0 +1,17 @@
+descripcion: >-
+  Inventado. Pide que le recomienden: lo contesta una persona.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-08
+  asunto: Which massage?
+  mensajes:
+    - de: sophie.laurent@ejemplo.com
+      nombre: Sophie Laurent
+      texto: |
+        Hello, my husband and I are in room 2. We've never had a massage
+        before. Which one would you recommend for us? We're free on Friday.
+
+espera:
+  salida: derivar

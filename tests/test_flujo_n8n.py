@@ -64,6 +64,13 @@ def test_el_probador_lee_igual_que_el_recorrido_del_buzon():
         assert de_probador in probador["Armar el hilo"]["parameters"]["jsCode"]
 
 
+def test_la_ia_contesta_siempre_igual_al_mismo_correo():
+    # Sin esto el mismo pedido salía bien en una pasada y mal en la siguiente, y
+    # la medición no decía nada. La copia del probador la cubre la prueba de arriba.
+    modelo = {p["name"]: p for p in _pasos()}["Modelo Gemini"]
+    assert modelo["parameters"]["options"].get("temperature") == 0
+
+
 # --- La puerta de prueba del recorrido entero ---------------------------------
 #
 # Los pedidos de `tests/fixtures/` pueden recorrer el camino completo —IA,

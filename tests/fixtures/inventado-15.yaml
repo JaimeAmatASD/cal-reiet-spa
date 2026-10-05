@@ -1,0 +1,18 @@
+descripcion: >-
+  Inventado. Contracturas: está en la lista de salud, sale derivada aunque el
+  cliente lo cuente como algo normal.
+
+recibido: "2026-09-28"
+
+hilo:
+  id: inventado-15
+  asunto: Masaje descontracturante
+  mensajes:
+    - de: ruben.cano@ejemplo.com
+      nombre: Rubén Cano
+      texto: |
+        Hola, tengo contracturas en el cuello por el trabajo. Querría un masaje
+        de 60 minutos el domingo 4 de octubre por la mañana. Habitación 13.
+
+espera:
+  salida: derivar

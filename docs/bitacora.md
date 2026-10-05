@@ -7,6 +7,43 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-05 — Fase 1, paso 6 (parcial): primera medición de la lectura, de 11 a 18 de 20
+
+**Qué se hizo.** Los veinte pedidos de prueba pasaron por la lectura de la IA. La
+primera vez acertó 11. Casi todos los fallos eran el mismo: la IA entendía bien qué
+pedía el cliente, pero marcaba como «deducido» lo que estaba escrito con todas las
+letras, y la ficha quedaba incompleta. James fijó qué cuenta como dicho (ver
+`decisions.md`). Se cambiaron las instrucciones de la IA y se la fijó para que el mismo
+correo dé la misma lectura. Dos pasadas después: 17 y 18 de 20.
+
+**Estado.** Medida la lectura; falta la prueba del recorrido entero y el reporte
+semanal. Lo que sigue fallando:
+- El 19, el cliente que duda entre viernes y sábado: la IA elige un día y lo da por
+  dicho. Es el error caro, agendar sobre una suposición. Hay que decidirlo antes de
+  seguir.
+- El 18, el pedido que reenvía recepción: marca «para él solo» como deducido. Sale
+  una pregunta de más, nada grave.
+- La IA todavía varía un poco entre pasadas, aunque mucho menos que antes.
+
+De los veinte pedidos, diecinueve los escribimos nosotros y solo uno es real
+anonimizado, así que el número mide menos de lo que parece.
+
+**Decisiones.** Qué cuenta como dicho: fecha con día y mes, lo traducido y las personas.
+Ver `decisions.md`.
+
+**Se rompió algo.** Sí, en `lessons.md`: el probador se caía con un pedido que no tenía
+anotada la salida. Además, un pedido de prueba estaba mal escrito y habría cortado la
+medición a la mitad. Al importar los flujos cambiados, n8n los deja apagados: se
+encienden con `n8n publish:workflow`.
+
+**Pendiente para la fase de la confirmación.** Que diga bien claro cuántos masajes son,
+porque «para los dos» se da ahora por dicho.
+
+**Próximo paso.** Decidir qué hacer cuando el cliente duda entre dos días, y pasar los
+veinte por el recorrido entero.
+
+---
+
 ## 2026-09-24 — Fase 1: la hoja recibe su primera fila, y los pedidos de prueba entran solos
 
 **Qué se hizo.** La hoja de registro nunca había recibido una fila: la fila de títulos
