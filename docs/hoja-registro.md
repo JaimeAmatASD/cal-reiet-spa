@@ -49,7 +49,7 @@ El sistema las deja vacías y no las vuelve a tocar.
 |---|---|
 | `respondido_en` | Cuándo salió la respuesta al cliente. Con `entrado_en` da el número que quiere Petra: cuánto se tarda en contestar |
 | `desenlace` | REALIZADA, CAÍDA, CANCELADA o SIN COBERTURA. Es lo que dice cuántos se pierden |
-| `nota` | Cualquier cosa que haga falta explicar |
+| `nota` | Cualquier cosa que haga falta explicar. La única excepción: si el pedido parece repetido, el sistema lo anota acá al crear la fila (ver abajo) |
 
 La columna `estado` usa el vocabulario cerrado del proyecto: SOLICITADA, EN HOLD,
 ASIGNADA, CONFIRMADA, REALIZADA, CAÍDA, CANCELADA, SIN COBERTURA. En la fase 1 se mueve
@@ -64,6 +64,17 @@ puede estar, y la lectura pasa de `incompleto` a `completo`. No se abre otra fil
 Al ponerla al día **no se pisa** lo que es de la persona que lleva la reserva: `estado`,
 `respondido_en`, `desenlace` y `nota`. `entrado_en` tampoco cambia: es la hora del
 primer correo de la conversación, no la del último.
+
+## Cuando el cliente escribe un correo nuevo por la misma reserva
+
+Si en vez de contestar escribe un correo aparte, el sistema no sabe que es la misma
+conversación y abre otra fila: el pedido se contaría dos veces. Por eso, antes de abrir
+una fila nueva, mira si ya hay otra con **el mismo nombre, el mismo día pedido y la misma
+habitación**. Si la hay, la fila nueva sale con la nota `posible repetido de <pedido>`.
+
+No las junta solo: dos personas de la misma habitación pueden pedir el mismo día. Una
+persona mira las dos y borra la que sobra, o borra la nota si no eran el mismo pedido.
+Sin nombre o sin fecha no se compara.
 
 Queda un caso sin cubrir: si la conversación empezó como una pregunta suelta y después
 se volvió reserva, `estado` queda vacío, porque solo se escribe al crear la fila. Hay

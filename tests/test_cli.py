@@ -121,3 +121,16 @@ def test_hay_que_leer_dice_si_la_conversacion_pasa_por_la_ia():
 
     assert llamar("hay_que_leer", aviso) == (0, {"leer": False})
     assert llamar("hay_que_leer", {"hilo": PEDIDO["hilo"]}) == (0, {"leer": True})
+
+
+def test_repetido_marca_la_fila_nueva_si_el_pedido_ya_esta_en_la_hoja():
+    # n8n lee la hoja entera y nos la pasa junto con la fila que va a agregar.
+    _, procesado = llamar("procesar", {"pedido": PEDIDO, "agenda": []})
+    anterior = {"pedido": "hilo-viejo", "cliente": "Ingrid Sorbo",
+                "habitacion": "", "fecha": "2026-09-09"}
+
+    codigo, salida = llamar("repetido", {"fila": procesado["fila"], "hoja": [anterior]})
+
+    assert codigo == 0
+    assert salida["fila"]["nota"] == "posible repetido de hilo-viejo"
+    assert list(salida["fila"]) == list(procesado["fila"])

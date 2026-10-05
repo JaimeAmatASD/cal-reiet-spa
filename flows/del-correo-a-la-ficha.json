@@ -1,6 +1,6 @@
 [
   {
-    "updatedAt": "2026-10-05T16:34:31.000Z",
+    "updatedAt": "2026-10-05T17:27:51.000Z",
     "createdAt": "2026-09-11T14:28:23.426Z",
     "id": "21Tm5a38Cv2kh6MQ",
     "name": "Cal Reiet - del correo a la hoja",
@@ -408,12 +408,12 @@
       },
       {
         "parameters": {
-          "jsCode": "return [{ json: $('Leer la respuesta').first().json.fila }];"
+          "jsCode": "// La fila nueva, con la nota si el mismo pedido ya tenía otra fila.\nreturn [{ json: JSON.parse($json.stdout).fila }];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
         "position": [
-          3328,
+          4000,
           416
         ],
         "id": "e0a20b8e-da7b-4afc-b830-e5844a88aee5",
@@ -490,7 +490,7 @@
         "type": "n8n-nodes-base.googleSheets",
         "typeVersion": 4.7,
         "position": [
-          3552,
+          4224,
           416
         ],
         "id": "181905e1-3f0b-4a69-8555-f0194fdfd9a5",
@@ -514,6 +514,63 @@
         ],
         "id": "db70f3fe-acbd-45fb-9629-da67da8f57d2",
         "name": "Llega de prueba"
+      },
+      {
+        "parameters": {
+          "documentId": {
+            "__rl": true,
+            "value": "1dB6c8zre-h4vsXbWurk-79mBuy9eOIrvdyTzqJJEdo4",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1"
+          },
+          "options": {}
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          3328,
+          416
+        ],
+        "id": "leer-la-hoja-entera",
+        "name": "Leer la hoja entera",
+        "alwaysOutputData": true,
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "r7EjmSVcF7BEfI2g",
+            "name": "Google Sheets account"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "jsCode": "// La fila que se va a agregar, junto con todo lo que ya hay en la hoja.\nconst fila = $('Leer la respuesta').first().json.fila;\nconst hoja = $input.all().map(i => i.json);\nreturn [{ json: { entrada: { fila, hoja } } }];"
+        },
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          3552,
+          416
+        ],
+        "id": "juntar-con-la-hoja",
+        "name": "Juntar con la hoja"
+      },
+      {
+        "parameters": {
+          "command": "=echo '{{ JSON.stringify($json.entrada).base64Encode() }}' | base64 -d | /home/jaime/cal-reiet-spa/.venv/bin/python /home/jaime/cal-reiet-spa/src/cli.py repetido"
+        },
+        "type": "n8n-nodes-base.executeCommand",
+        "typeVersion": 1,
+        "position": [
+          3776,
+          416
+        ],
+        "id": "ya-estaba-en-otra-fila",
+        "name": "¿Ya estaba en otra fila?"
       }
     ],
     "connections": {
@@ -712,7 +769,7 @@
           ],
           [
             {
-              "node": "La fila nueva",
+              "node": "Leer la hoja entera",
               "type": "main",
               "index": 0
             }
@@ -751,6 +808,39 @@
             }
           ]
         ]
+      },
+      "Leer la hoja entera": {
+        "main": [
+          [
+            {
+              "node": "Juntar con la hoja",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Juntar con la hoja": {
+        "main": [
+          [
+            {
+              "node": "¿Ya estaba en otra fila?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "¿Ya estaba en otra fila?": {
+        "main": [
+          [
+            {
+              "node": "La fila nueva",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "settings": {
@@ -780,9 +870,9 @@
     },
     "nodeGroups": [],
     "pinData": {},
-    "versionId": "9acf3cc9-5119-48a9-a8fb-1263b733c713",
-    "activeVersionId": "9acf3cc9-5119-48a9-a8fb-1263b733c713",
-    "versionCounter": 45,
+    "versionId": "97c278a4-0090-491e-ad81-663e0d211a4c",
+    "activeVersionId": "97c278a4-0090-491e-ad81-663e0d211a4c",
+    "versionCounter": 46,
     "triggerCount": 1,
     "sourceWorkflowId": null,
     "tags": [],

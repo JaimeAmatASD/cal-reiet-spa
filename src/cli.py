@@ -9,6 +9,7 @@ Se usa así, y así es como lo llama el nodo «Execute Command» de n8n:
     echo '{"hilo": {...}}' | python src/cli.py hay_que_leer
     echo '{"pedido": {...}, "agenda": [...]}' | python src/cli.py procesar
     echo '{"ficha": {...}, "inicio": "12:15", "salas": ["sala_2"]}' | python src/cli.py peticion
+    echo '{"fila": {...}, "hoja": [...]}' | python src/cli.py repetido
 
 `hay_que_leer` dice si la conversación pasa por la IA o es un aviso
 automático que se deja afuera sin gastar saldo.
@@ -21,6 +22,10 @@ sabe de qué día hay que traer la agenda.
 `procesar` devuelve además `fila`: la línea que se escribe en la hoja de
 registro, con las columnas ya en orden. Y `fila_actualizar`: lo que se
 escribe si ese pedido ya tiene fila, sin el estado ni lo que llena una persona.
+
+`repetido` recibe la fila nueva y la hoja entera, y devuelve la fila con una
+nota si ese mismo pedido ya tiene otra fila: el cliente escribió un correo
+nuevo en vez de contestar. Lo decide una persona.
 
 `peticion` escribe el bloque para el grupo, con la hora que eligió una persona
 entre las libres. El sistema no elige la hora.
@@ -52,12 +57,16 @@ def armar_peticion(entrada: dict, config: dict) -> dict:
         entrada["ficha"], entrada["inicio"], entrada["salas"], config)}
 
 
+def repetido(entrada: dict, config: dict) -> dict:
+    return {"fila": registro.marcar_repetido(entrada["fila"], entrada["hoja"])}
+
+
 def hay_que_leer(entrada: dict, config: dict) -> dict:
     return {"leer": flujo.hay_que_leer(entrada["hilo"], config)}
 
 
 COMANDOS = {"hay_que_leer": hay_que_leer, "procesar": procesar,
-            "peticion": armar_peticion}
+            "peticion": armar_peticion, "repetido": repetido}
 
 
 def main(argv: list) -> int:

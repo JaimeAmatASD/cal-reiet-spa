@@ -5,6 +5,20 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-10-05 — El pedido repetido se marca, no se junta solo
+
+**Contexto**: un cliente que escribe dos correos aparte por la misma reserva abría dos
+filas en la hoja, y el pedido se contaba dos veces. Es uno de los tres números con los
+que se decide si el proyecto sigue.
+**Alternativas**: juntar las dos filas solas; o dejarlo y que lo vea Egi a mano.
+**Elegido** (James): si ya hay una fila con el mismo nombre, el mismo día y la misma
+habitación, la nueva sale con la nota «posible repetido de» la otra, y decide una
+persona. La nota va en la columna `nota`, que el sistema solo escribe al crear la fila;
+así la hoja no cambia de columnas.
+**Costo aceptado**: alguien tiene que mirar las marcadas. Y se escapan los repetidos en
+que el cliente escribe el nombre distinto o cambia de día.
+**Se revisa si**: las marcas salen muchas veces sobre pedidos que no eran el mismo.
+
 ## 2026-10-05 — Si el cliente duda entre dos días, no hay fecha
 
 **Contexto**: en la medición, el pedido que dice «el viernes 2 o el sábado 3» salía con

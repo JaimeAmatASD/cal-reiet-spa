@@ -142,3 +142,22 @@ def test_el_probador_del_recorrido_llama_al_recorrido_del_buzon():
     llamada = pasos["n8n-nodes-base.executeWorkflow"]["parameters"]
     assert llamada["workflowId"]["value"] == _flujo()["id"]
     assert pasos["n8n-nodes-base.webhook"]["parameters"]["path"] == "probador-recorrido"
+
+
+def test_antes_de_agregar_una_fila_se_mira_si_el_pedido_ya_estaba():
+    # Un cliente que escribe dos correos aparte por la misma reserva abría dos
+    # filas y se contaba dos veces. La fila nueva pasa antes por `repetido`.
+    datos = json.loads(FLUJO.read_text(encoding="utf-8"))
+    if isinstance(datos, list):
+        datos = datos[0]
+    pasos = {p["name"]: p for p in datos["nodes"]}
+    siguiente = {origen: [d["node"] for rama in salidas.get("main", []) for d in rama]
+                 for origen, salidas in datos["connections"].items()}
+
+    camino, paso = [], siguiente["¿Existe la fila?"][-1]
+    while paso != "Agregar la fila":
+        camino.append(paso)
+        paso = siguiente[paso][0]
+    comandos = [pasos[p]["parameters"].get("command", "") for p in camino]
+    assert any(c.endswith("cli.py repetido") for c in comandos), camino
+    assert pasos[camino[0]].get("alwaysOutputData") is True, camino[0]

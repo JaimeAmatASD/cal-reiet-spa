@@ -7,6 +7,27 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-05 — Fase 1, paso 6 (parcial): el pedido repetido sale marcado en la hoja
+
+**Qué se hizo.** Antes de abrir una fila nueva, el sistema mira si en la hoja ya hay
+otra con el mismo nombre, el mismo día y la misma habitación. Si la hay, la nueva sale
+con la nota «posible repetido de» la otra, y decide una persona. No las junta solo.
+
+**Estado.** Probado con un pedido repetido a propósito: entró a la hoja como
+`prueba-repetido-09`, con la nota «posible repetido de prueba-inventado-09». Esa fila
+de prueba quedó en la hoja.
+
+**Decisiones.** Se marca, no se junta solo. Ver `decisions.md`.
+
+**Se rompió algo.** Al cargar el cambio en n8n no se guardó antes la copia de su base,
+como pide el README. Se guardó después. No se perdió nada, porque lo cargado salía de la
+copia de esta tarde, que estaba al día.
+
+**Próximo paso.** El reporte semanal. Sigue pendiente lo de proponer horas en días que
+ya pasaron, para la fase del buscador de huecos.
+
+---
+
 ## 2026-10-05 — Fase 1, paso 6 (parcial): los veinte pedidos recorren el camino entero, 20 de 20
 
 **Qué se hizo.** Se resolvió el pedido que duda entre dos días: si el cliente no eligió,

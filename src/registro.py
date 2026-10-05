@@ -19,7 +19,7 @@ Lo que NO se escribe acá, a propósito:
 """
 from datetime import datetime
 
-__all__ = ["COLUMNAS", "fila", "actualizacion"]
+__all__ = ["COLUMNAS", "fila", "actualizacion", "marcar_repetido"]
 
 COLUMNAS = (
     # --- lo que escribe el sistema ---
@@ -98,6 +98,33 @@ def actualizacion(fila: dict) -> dict:
     pisar lo que es de la persona que lleva la reserva.
     """
     return {c: v for c, v in fila.items() if c not in NO_SE_PISA}
+
+
+def marcar_repetido(fila: dict, hoja: list) -> dict:
+    """Marca la fila nueva si el mismo pedido ya tiene otra fila en la hoja.
+
+    Pasa cuando el cliente escribe un correo nuevo, no una respuesta, por la
+    misma reserva: mismo nombre, mismo día y misma habitación. No se juntan
+    solas porque dos personas de la misma habitación pueden pedir el mismo día:
+    la nota avisa y decide una persona. Se escribe solo al crear la fila; después
+    la nota es de quien lleva la reserva.
+    """
+    if not (_igualable(fila.get("cliente")) and _igualable(fila.get("fecha"))):
+        return fila
+    clave = _clave(fila)
+    for otra in hoja:
+        if otra.get("pedido") and otra["pedido"] != fila["pedido"] \
+                and _clave(otra) == clave:
+            return fila | {"nota": f"posible repetido de {otra['pedido']}"}
+    return fila
+
+
+def _clave(fila: dict) -> tuple:
+    return tuple(_igualable(fila.get(c)) for c in ("cliente", "fecha", "habitacion"))
+
+
+def _igualable(valor) -> str:
+    return " ".join(str(valor if valor is not None else "").lower().split())
 
 
 def _valor(campo: dict):
