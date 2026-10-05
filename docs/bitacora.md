@@ -7,6 +7,34 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-05 — Fase 1, paso 6 (parcial): los veinte pedidos recorren el camino entero, 20 de 20
+
+**Qué se hizo.** Se resolvió el pedido que duda entre dos días: si el cliente no eligió,
+la fecha queda vacía y se le pregunta (ver `decisions.md`). Después los veinte pedidos
+de prueba hicieron el recorrido entero, de la lectura a la hoja, y los veinte salieron
+como tenían que salir. El de recepción que reenvía un pedido también se arregló solo.
+
+**Estado.** La lectura está bien con los pedidos de prueba. Falta el reporte semanal.
+Dos cosas que vio la hoja y quedan anotadas para más adelante:
+- **El mismo pedido en dos filas.** Si un cliente escribe dos correos aparte por la
+  misma reserva, la hoja abre dos filas y lo cuenta dos veces. Solo los junta cuando
+  contesta en la misma conversación. Afecta al número de cuántos pedidos entran.
+- **Se proponen horas en días que ya pasaron.** Siete pedidos de prueba piden días
+  anteriores a hoy y salen igual como «elegir hora». En la prueba es por las fechas
+  fijas, pero con un cliente real que pide «mañana» y se le contesta tarde sería un
+  error. Le toca al buscador de huecos.
+
+El pedido que no dice nada concreto queda sin estado: se lee como pregunta, no como
+reserva. Es así a propósito.
+
+**Decisiones.** Si duda entre dos días, no hay fecha. Ver `decisions.md`.
+
+**Se rompió algo.** No.
+
+**Próximo paso.** Decidir qué hacer con el pedido en dos filas, y el reporte semanal.
+
+---
+
 ## 2026-10-05 — Fase 1, paso 6 (parcial): primera medición de la lectura, de 11 a 18 de 20
 
 **Qué se hizo.** Los veinte pedidos de prueba pasaron por la lectura de la IA. La

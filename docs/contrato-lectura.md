@@ -108,6 +108,8 @@ Reglas:
      "Tuesday 6 October"), es "dicho", aunque el año lo pongas vos. Si solo dice
      "el viernes", "mañana" o "la semana que viene" y vos ponés la fecha, es
      "deducido".
+   - Si duda entre dos o más días ("el viernes 2 o el sábado 3"), no pongas
+     fecha: omitila. Todavía no eligió, y el sistema le pregunta.
    - Traducir no es deducir: "nachmittags" es tarde, "in the morning" es mañana,
      y los dos son "dicho".
    - Personas: si dice para quiénes es, es "dicho". "Para mi pareja y para mí" o

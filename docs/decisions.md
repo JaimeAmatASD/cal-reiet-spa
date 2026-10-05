@@ -5,6 +5,18 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-10-05 — Si el cliente duda entre dos días, no hay fecha
+
+**Contexto**: en la medición, el pedido que dice «el viernes 2 o el sábado 3» salía con
+uno de los dos días elegido y dado por dicho. Es el error caro: agendar sobre una
+suposición.
+**Alternativas**: quedarse con el primero que nombra, o anotar los dos.
+**Elegido**: la fecha queda vacía y el pedido sale incompleto. Todavía no eligió, y el
+sistema le pregunta.
+**Costo aceptado**: un correo de ida y vuelta más con ese cliente.
+**Se revisa si**: estos pedidos resultan frecuentes y la pregunta de más empieza a
+demorar las respuestas.
+
 ## 2026-10-05 — Qué cuenta como dicho: la fecha con día y mes, lo traducido y las personas
 
 **Contexto**: la primera medición con los veinte pedidos de prueba dio 11 de 20. En siete
