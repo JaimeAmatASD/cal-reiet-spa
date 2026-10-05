@@ -1,6 +1,6 @@
 [
   {
-    "updatedAt": "2026-10-05T17:27:51.000Z",
+    "updatedAt": "2026-10-05T22:41:20.000Z",
     "createdAt": "2026-09-11T14:28:23.426Z",
     "id": "21Tm5a38Cv2kh6MQ",
     "name": "Cal Reiet - del correo a la hoja",
@@ -64,7 +64,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Puerta de prueba: un pedido de tests/fixtures/ llega ya armado desde\n// src/probador_recorrido.py, sin pasar por el buzón. Su número de hilo lleva\n// «prueba-» delante para que la fila se distinga en la hoja de las de verdad.\nconst prueba = $input.first().json.prueba;\nif (prueba) {\n  const hilo = { ...prueba.hilo, id: `prueba-${prueba.hilo.id}` };\n  return [{ json: {\n    hilo,\n    fecha_hoy: prueba.fecha_hoy || new Date().toISOString().slice(0, 10),\n    duraciones: \"40, 60, 90\",\n    texto_hilo: hilo.mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n  }}];\n}\n\n// Deja el hilo con la forma que espera nuestro código: id, asunto y mensajes.\n// \"Traer el hilo entero\" entrega un ítem por mensaje, con el cuerpo codificado\n// dentro de payload. Del correo solo se toma quién escribe y qué escribió.\nconst decodificar = (data, charset) => {\n  const bytes = Buffer.from(String(data).replace(/-/g, \"+\").replace(/_/g, \"/\"), \"base64\");\n  return /8859-1|latin1|windows-1252/i.test(charset || \"\") ? bytes.toString(\"latin1\") : bytes.toString(\"utf8\");\n};\nconst charsetDe = (tipo) => (String(tipo || \"\").match(/charset=\"?([^\";\\s]+)/i) || [])[1];\nconst cabecera = (parte, nombre) =>\n  (parte.headers || []).find(h => h.name.toLowerCase() === nombre.toLowerCase())?.value;\n// Busca la primera parte del tipo pedido, recorriendo las partes anidadas.\nconst buscar = (parte, tipo, tipoRaiz) => {\n  if (!parte) return \"\";\n  if (parte.mimeType === tipo && parte.body?.data) {\n    return decodificar(parte.body.data, charsetDe(cabecera(parte, \"Content-Type\") || tipoRaiz));\n  }\n  for (const p of parte.parts || []) {\n    const t = buscar(p, tipo, tipoRaiz);\n    if (t) return t;\n  }\n  return \"\";\n};\nconst sinHtml = (html) => html\n  .replace(/<(style|script)[\\s\\S]*?<\\/\\1>/gi, \"\")\n  .replace(/<br\\s*\\/?>|<\\/p>|<\\/div>/gi, \"\\n\")\n  .replace(/<[^>]+>/g, \"\")\n  .replace(/&nbsp;/g, \" \").replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n  .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nconst items = $input.all().map(i => i.json);\nconst mensajes = items.map(m => {\n  const de = m.From || \"\";\n  const correo = (de.match(/<([^>]+)>/) || [])[1] || de.trim();\n  const tipoRaiz = m[\"Content-Type\"];\n  const texto = buscar(m.payload, \"text/plain\", tipoRaiz)\n    || sinHtml(buscar(m.payload, \"text/html\", tipoRaiz))\n    || m.snippet || \"\";\n  return {\n    de: correo,\n    nombre: de.replace(/<.*>/, \"\").replace(/\"/g, \"\").trim(),\n    texto: texto.trim(),\n    // Hora universal del correo. Nuestro código se queda con la del primero.\n    fecha: m.internalDate ? new Date(Number(m.internalDate)).toISOString() : \"\",\n  };\n});\nconst hoy = new Date().toISOString().slice(0, 10);\nreturn [{ json: {\n  hilo: { id: items[0]?.threadId || items[0]?.id, asunto: items[0]?.Subject || \"\", mensajes },\n  fecha_hoy: hoy,\n  duraciones: \"40, 60, 90\",\n  texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
+          "jsCode": "// Puerta de prueba: un pedido de tests/fixtures/ llega ya armado desde\n// src/probador_recorrido.py, sin pasar por el buzón. Su número de hilo lleva\n// «prueba-» delante para que la fila se distinga en la hoja de las de verdad.\nconst prueba = $input.first().json.prueba;\nif (prueba) {\n  const hilo = { ...prueba.hilo, id: `prueba-${prueba.hilo.id}` };\n  return [{ json: {\n    hilo,\n    fecha_hoy: prueba.fecha_hoy || new Date().toISOString().slice(0, 10),\n    duraciones: \"40, 60, 90\",\n    texto_hilo: hilo.mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n  }}];\n}\n\n// Deja el hilo con la forma que espera nuestro código: id, asunto y mensajes.\n// \"Traer el hilo entero\" entrega un ítem por mensaje, con el cuerpo codificado\n// dentro de payload. Del correo solo se toma quién escribe y qué escribió.\nconst decodificar = (data, charset) => {\n  const bytes = Buffer.from(String(data).replace(/-/g, \"+\").replace(/_/g, \"/\"), \"base64\");\n  return /8859-1|latin1|windows-1252/i.test(charset || \"\") ? bytes.toString(\"latin1\") : bytes.toString(\"utf8\");\n};\nconst charsetDe = (tipo) => (String(tipo || \"\").match(/charset=\"?([^\";\\s]+)/i) || [])[1];\nconst cabecera = (parte, nombre) =>\n  (parte.headers || []).find(h => h.name.toLowerCase() === nombre.toLowerCase())?.value;\n// Busca la primera parte del tipo pedido, recorriendo las partes anidadas.\nconst buscar = (parte, tipo, tipoRaiz) => {\n  if (!parte) return \"\";\n  if (parte.mimeType === tipo && parte.body?.data) {\n    return decodificar(parte.body.data, charsetDe(cabecera(parte, \"Content-Type\") || tipoRaiz));\n  }\n  for (const p of parte.parts || []) {\n    const t = buscar(p, tipo, tipoRaiz);\n    if (t) return t;\n  }\n  return \"\";\n};\nconst sinHtml = (html) => html\n  .replace(/<(style|script)[\\s\\S]*?<\\/\\1>/gi, \"\")\n  .replace(/<br\\s*\\/?>|<\\/p>|<\\/div>/gi, \"\\n\")\n  .replace(/<[^>]+>/g, \"\")\n  .replace(/&nbsp;/g, \" \").replace(/&amp;/g, \"&\").replace(/&lt;/g, \"<\").replace(/&gt;/g, \">\")\n  .replace(/\\n{3,}/g, \"\\n\\n\").trim();\n\nconst items = $input.all().map(i => i.json);\nconst mensajes = items.map(m => {\n  const de = m.From || \"\";\n  const correo = (de.match(/<([^>]+)>/) || [])[1] || de.trim();\n  const tipoRaiz = m[\"Content-Type\"];\n  const texto = buscar(m.payload, \"text/plain\", tipoRaiz)\n    || sinHtml(buscar(m.payload, \"text/html\", tipoRaiz))\n    || m.snippet || \"\";\n  return {\n    id: m.id,\n    // Lo mandó el spa: es nuestra propia respuesta dentro de la conversación.\n    propio: (m.labelIds || []).includes(\"SENT\"),\n    de: correo,\n    nombre: de.replace(/<.*>/, \"\").replace(/\"/g, \"\").trim(),\n    texto: texto.trim(),\n    // Hora universal del correo. Nuestro código se queda con la del primero.\n    fecha: m.internalDate ? new Date(Number(m.internalDate)).toISOString() : \"\",\n  };\n});\nconst hoy = new Date().toISOString().slice(0, 10);\nreturn [{ json: {\n  hilo: { id: items[0]?.threadId || items[0]?.id, asunto: items[0]?.Subject || \"\", mensajes },\n  fecha_hoy: hoy,\n  duraciones: \"40, 60, 90\",\n  texto_hilo: mensajes.map(m => `De: ${m.de}\\n${m.texto}`).join(\"\\n\\n---\\n\\n\"),\n}}];\n"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -78,7 +78,7 @@
       {
         "parameters": {
           "promptType": "define",
-          "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $('Armar el hilo').first().json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $('Armar el hilo').first().json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Qué es \"dicho\" y qué es \"deducido\":\n   - Fecha: si el cliente escribe el día y el mes (\"el sábado 3 de octubre\", \"Tuesday 6 October\"), es \"dicho\", aunque el año lo pongas vos. Si solo dice \"el viernes\", \"mañana\" o \"la semana que viene\" y vos ponés la fecha, es \"deducido\".\n   - Si duda entre dos o más días (\"el viernes 2 o el sábado 3\"), no pongas fecha: omitila. Todavía no eligió, y el sistema le pregunta.\n   - Traducir no es deducir: \"nachmittags\" es tarde, \"in the morning\" es mañana, y los dos son \"dicho\".\n   - Personas: si dice para quiénes es, es \"dicho\". \"Para mi pareja y para mí\" o \"para los dos\" son 2; \"para él solo\" o \"solo para mí\" es 1.\n   - Duración: solo si dice los minutos. \"Un masaje\" sin minutos no lleva duración: omitila, no elijas una por él.\n   - En todo lo demás, ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si quiere reservar, \"pregunta\" si solo pregunta por precios u horarios, y \"derivar\" si es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $('Armar el hilo').first().json.texto_hilo }}",
+          "text": "=Sos el asistente del spa de un hotel. Te paso un hilo de correo de un cliente y tenés que devolver un JSON con lo que pidió. Nada más que el JSON.\n\nLeé EL HILO ENTERO, no solo el último mensaje: hay datos que el cliente dio tres correos atrás y no repite.\n\nHoy es {{ $('Armar el hilo').first().json.fecha_hoy }}. Las duraciones que ofrece la casa son {{ $('Armar el hilo').first().json.duraciones }} minutos. Las franjas son mañana y tarde.\n\nDevolvé exactamente esta forma:\n\n{\"idioma\":\"es\",\"intencion\":\"reserva\",\"senales_salud\":false,\"pide_recomendacion\":false,\"cliente\":{\"nombre\":{\"valor\":\"\",\"origen\":\"dicho\"},\"correo\":{\"valor\":\"\",\"origen\":\"dicho\"},\"habitacion\":{\"valor\":\"\",\"origen\":\"dicho\"}},\"peticion\":{\"duracion\":{\"valor\":60,\"origen\":\"dicho\"},\"fecha\":{\"valor\":\"2026-09-12\",\"origen\":\"deducido\"},\"franja\":{\"valor\":\"tarde\",\"origen\":\"dicho\"},\"personas\":{\"valor\":2,\"origen\":\"dicho\"},\"preferencia_terapeuta\":{\"valor\":\"mujer\",\"origen\":\"dicho\"}}}\n\nReglas:\n\n1. Cada campo con valor lleva \"origen\": \"dicho\" si está escrito con esas palabras, \"deducido\" si lo interpretaste vos, \"historial\" si sale de un mensaje anterior del hilo. Si no sabés un campo, omitilo.\n2. Qué es \"dicho\" y qué es \"deducido\":\n   - Fecha: si el cliente escribe el día y el mes (\"el sábado 3 de octubre\", \"Tuesday 6 October\"), es \"dicho\", aunque el año lo pongas vos. Si solo dice \"el viernes\", \"mañana\" o \"la semana que viene\" y vos ponés la fecha, es \"deducido\".\n   - Si duda entre dos o más días (\"el viernes 2 o el sábado 3\"), no pongas fecha: omitila. Todavía no eligió, y el sistema le pregunta.\n   - Traducir no es deducir: \"nachmittags\" es tarde, \"in the morning\" es mañana, y los dos son \"dicho\".\n   - Personas: si dice para quiénes es, es \"dicho\". \"Para mi pareja y para mí\" o \"para los dos\" son 2; \"para él solo\" o \"solo para mí\" es 1.\n   - Duración: solo si dice los minutos. \"Un masaje\" sin minutos no lleva duración: omitila, no elijas una por él.\n   - En todo lo demás, ante la duda, \"deducido\".\n3. Poné \"senales_salud\": true si el cliente menciona cualquier cosa de salud: embarazo, lesiones, operaciones, dolores, medicación, alergias, o que va al fisioterapeuta. Ante la MENOR duda, true.\n4. Poné \"pide_recomendacion\": true si pregunta cuál le conviene o qué le recomendamos.\n5. \"intencion\" es \"reserva\" si el cliente dice que quiere hacerse algo, aunque todavía no diga qué, cuándo ni para cuántos. \"Quiero un masaje\", \"busco hacerme unos tratamientos\", \"me gustaría reservar\" o \"queríamos venir al spa\" son \"reserva\". Es \"pregunta\" solo si pregunta algo sin decir que quiere venir: \"¿cuánto cuesta el masaje de 60?\", \"¿a qué hora abren?\". Ante la duda entre las dos, \"reserva\": el sistema le va a preguntar lo que falte. \"derivar\" es cualquier otra cosa.\n6. El idioma es el del cliente, en dos letras: es, en, de, fr...\n7. No inventes. Un campo que no está es un campo que falta, y el sistema sabe preguntarlo.\n\nEl hilo:\n\n{{ $('Armar el hilo').first().json.texto_hilo }}",
           "batching": {}
         },
         "type": "@n8n/n8n-nodes-langchain.chainLlm",
@@ -308,7 +308,7 @@
       },
       {
         "parameters": {
-          "jsCode": "// Lo que devolvió nuestro código: la fila nueva y lo que se puede pisar si ya existe.\nconst r = JSON.parse($json.stdout);\nreturn [{ json: { fila: r.fila, fila_actualizar: r.fila_actualizar } }];"
+          "jsCode": "// Lo que devolvió nuestro código: la fila nueva y lo que se puede pisar si ya existe.\n// Y la respuesta al cliente cuando falta algo: se le contesta al último correo suyo.\n// Los pedidos de prueba no tienen correo al que contestar.\nconst r = JSON.parse($json.stdout);\nconst suyos = $('Armar el hilo').first().json.hilo.mensajes.filter(m => !m.propio && m.id);\nconst responder_a = suyos.length ? suyos[suyos.length - 1].id : \"\";\nconst contestar = r.accion === \"borrador\" && r.borrador && responder_a ? r.borrador.cuerpo : \"\";\nreturn [{ json: { fila: r.fila, fila_actualizar: r.fila_actualizar, contestar, responder_a } }];"
         },
         "type": "n8n-nodes-base.code",
         "typeVersion": 2,
@@ -571,6 +571,67 @@
         ],
         "id": "ya-estaba-en-otra-fila",
         "name": "¿Ya estaba en otra fila?"
+      },
+      {
+        "parameters": {
+          "conditions": {
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "loose",
+              "version": 2
+            },
+            "conditions": [
+              {
+                "id": "contestar-no-vacio",
+                "leftValue": "={{ $('Leer la respuesta').first().json.contestar }}",
+                "rightValue": "",
+                "operator": {
+                  "type": "string",
+                  "operation": "notEmpty",
+                  "singleValue": true
+                }
+              }
+            ],
+            "combinator": "and"
+          },
+          "looseTypeValidation": true,
+          "options": {}
+        },
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3,
+        "position": [
+          4448,
+          304
+        ],
+        "id": "hay-que-contestarle",
+        "name": "¿Hay que contestarle?"
+      },
+      {
+        "parameters": {
+          "operation": "reply",
+          "messageId": "={{ $('Leer la respuesta').first().json.responder_a }}",
+          "emailType": "text",
+          "message": "={{ $('Leer la respuesta').first().json.contestar }}",
+          "options": {
+            "appendAttribution": false
+          }
+        },
+        "type": "n8n-nodes-base.gmail",
+        "typeVersion": 2.2,
+        "position": [
+          4672,
+          304
+        ],
+        "id": "contestar-al-cliente",
+        "name": "Contestar al cliente",
+        "webhookId": "8fbe6138-91d1-482a-adae-7a6d86d92972",
+        "credentials": {
+          "gmailOAuth2": {
+            "id": "tw8vfFqARbSxMUGX",
+            "name": "Gmail account"
+          }
+        }
       }
     ],
     "connections": {
@@ -841,6 +902,40 @@
             }
           ]
         ]
+      },
+      "Agregar la fila": {
+        "main": [
+          [
+            {
+              "node": "¿Hay que contestarle?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Poner al día la fila": {
+        "main": [
+          [
+            {
+              "node": "¿Hay que contestarle?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "¿Hay que contestarle?": {
+        "main": [
+          [
+            {
+              "node": "Contestar al cliente",
+              "type": "main",
+              "index": 0
+            }
+          ],
+          []
+        ]
       }
     },
     "settings": {
@@ -850,17 +945,16 @@
     "staticData": {
       "node:Correo nuevo": {
         "Correo nuevo": {
-          "lastTimeChecked": 1791192827,
+          "lastTimeChecked": 1791239892,
           "pendingMessageIds": [],
           "possibleDuplicates": [
-            "1a10b698838d9cd8",
-            "1a0fbf67531c24a6",
-            "1a0dbdc3550ebf61",
-            "1a0d2f31833956ea",
-            "1a0d2dd4123f8f95",
-            "1a0d2dcc97927195",
-            "1a0d2dc4f3313fd9",
-            "1a0d2dbe5cf3abf0"
+            "1a10e37e011c8290"
+          ],
+          "failedFetches": [
+            [
+              "1a10e2d8a7081267",
+              7
+            ]
           ]
         }
       }
@@ -870,9 +964,9 @@
     },
     "nodeGroups": [],
     "pinData": {},
-    "versionId": "97c278a4-0090-491e-ad81-663e0d211a4c",
-    "activeVersionId": "97c278a4-0090-491e-ad81-663e0d211a4c",
-    "versionCounter": 46,
+    "versionId": "400c3b9f-9891-41a7-aa16-2d11a999758a",
+    "activeVersionId": "400c3b9f-9891-41a7-aa16-2d11a999758a",
+    "versionCounter": 49,
     "triggerCount": 1,
     "sourceWorkflowId": null,
     "tags": [],

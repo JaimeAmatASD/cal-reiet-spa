@@ -15,20 +15,19 @@ import casa
 
 
 def redactar(ficha: dict, config: dict, asunto_original: str) -> dict | None:
-    """Devuelve el borrador, o None si esto lo tiene que escribir una persona."""
+    """Devuelve el borrador, o None si la casa no habla el idioma del cliente."""
     idioma = ficha["idioma"]
     if idioma not in config["idiomas"]:
         return None
 
-    nombre = ficha["cliente"]["nombre"]["valor"]
-    if not nombre:
-        return None
-
     textos = config["textos"]["borrador"][idioma]
     peticion = ficha["peticion"]
-    falta = ficha["falta"]
+    nombre = ficha["cliente"]["nombre"]["valor"]
+    # Sin nombre no se deja de contestar: se saluda sin él y se le pregunta.
+    falta = ficha["falta"] if nombre else ["nombre"] + ficha["falta"]
 
-    lineas = [textos["saludo"].format(nombre=nombre), ""]
+    saludo = textos["saludo"].format(nombre=nombre) if nombre else textos["saludo_sin_nombre"]
+    lineas = [saludo, ""]
 
     if falta:
         lineas += [textos["intro"], ""]
@@ -37,6 +36,8 @@ def redactar(ficha: dict, config: dict, asunto_original: str) -> dict | None:
         # correo arranca directamente por ahí y no hace falta otra entrada.
         lineas += [textos["intro_completo"], ""]
 
+    if "nombre" in falta:
+        lineas += [textos["pregunta_nombre"], ""]
     if "duracion" in falta:
         lineas.append(textos["pregunta_duracion"])
         lineas += _opciones_de_duracion(config, textos)

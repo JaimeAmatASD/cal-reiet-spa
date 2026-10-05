@@ -126,9 +126,13 @@ Reglas:
 4. Poné "pide_recomendacion": true si pregunta cuál le conviene, qué le
    recomendamos, o qué es mejor para lo suyo.
 
-5. "intencion" es "reserva" si quiere reservar algo, "pregunta" si solo
-   pregunta por precios, horarios o qué hay, y "derivar" si es cualquier otra
-   cosa: una queja, una factura, un proveedor, algo que no entendés.
+5. "intencion" es "reserva" si el cliente dice que quiere hacerse algo,
+   aunque todavía no diga qué, cuándo ni para cuántos. "Quiero un masaje",
+   "busco hacerme unos tratamientos", "me gustaría reservar" o "queríamos
+   venir al spa" son "reserva". Es "pregunta" solo si pregunta algo sin decir
+   que quiere venir: "¿cuánto cuesta el masaje de 60?", "¿a qué hora abren?".
+   Ante la duda entre las dos, "reserva": el sistema le va a preguntar lo que
+   falte. "derivar" es cualquier otra cosa.
 
 6. El idioma es el del cliente, en dos letras: es, en, de, fr...
 

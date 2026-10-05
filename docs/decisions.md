@@ -5,6 +5,35 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-10-06 — El sistema contesta solo y pregunta lo que falta, nombre incluido
+
+**Contexto**: para probar el recorrido entero hace falta que el cliente reciba
+respuesta, y eso estaba en la fase 2. En la primera prueba, «estoy buscando hacerme
+unos tratamientos», sin firma, no recibió nada por dos motivos: se leyó como consulta
+y no como reserva, y sin nombre el sistema no escribía.
+**Alternativas**: dejar la respuesta para la fase 2 y que la escriba una persona.
+**Elegido** (James): el sistema contesta solo cuando falta algún dato, y va
+preguntando hasta completar la petición. Quien quiere venir a hacerse algo cuenta
+como reserva aunque no diga nada concreto. Si no firma, se le saluda sin nombre y se
+le pregunta. Las consultas sueltas sobre precios u horarios siguen yendo a una
+persona.
+**Costo aceptado**: se adelanta trabajo de la fase 2. Y quien solo curioseaba puede
+recibir preguntas como si fuera a reservar.
+**Se revisa si**: los clientes que solo preguntaban se quejan de las preguntas.
+
+## 2026-10-06 — El reporte semanal sale de la fase 1
+
+**Contexto**: el plan cerraba la fase 1 con un reporte semanal que se genera solo. Dos
+de sus tres números (cuánto se tarda en contestar y cuántos se pierden) dependen de
+columnas que hoy rellena una persona a mano.
+**Alternativas**: armarlo ahora, o dejarlo.
+**Elegido** (James): se deja. El trabajo se concentra en lo que funciona sobre los
+pedidos. La hoja sigue anotando todo, así que los números se pueden sacar después.
+**Costo aceptado**: la fase 1 no cumple su «terminado» tal como estaba escrito, y Petra
+no recibe los números solos.
+**Se revisa si**: hace falta presentarle a Petra los números para decidir si el
+proyecto sigue.
+
 ## 2026-10-05 — El pedido repetido se marca, no se junta solo
 
 **Contexto**: un cliente que escribe dos correos aparte por la misma reserva abría dos

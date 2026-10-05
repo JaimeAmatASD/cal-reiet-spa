@@ -34,6 +34,11 @@ def hay_que_leer(hilo: dict, config: dict) -> bool:
     avisos que no son pedidos y que meterían filas en la hoja. En cuanto un
     cliente escribe en la conversación, se lee.
     """
+    # Lo último lo escribió el spa: es nuestra propia respuesta que vuelve a
+    # entrar al buzón. Se lee cuando conteste el cliente.
+    if hilo["mensajes"] and hilo["mensajes"][-1].get("propio"):
+        return False
+
     automaticos = config.get("remitentes_automaticos") or []
 
     def es_automatico(correo: str) -> bool:

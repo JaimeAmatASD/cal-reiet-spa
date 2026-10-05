@@ -46,3 +46,16 @@ def test_una_casa_sin_lista_lo_lee_todo(config):
     sin_lista = {k: v for k, v in config.items() if k != "remitentes_automaticos"}
 
     assert flujo.hay_que_leer(hilo("no-reply@accounts.google.com"), sin_lista)
+
+
+def test_si_lo_ultimo_lo_escribio_el_spa_no_se_vuelve_a_leer(config):
+    # Cuando el spa contesta, su respuesta entra en la misma conversación y el
+    # buzón la ve como correo nuevo. Leerla otra vez volvería a contestar al
+    # cliente, y así sin fin. Se lee cuando el que escribe es el cliente.
+    conversacion = {"id": "h", "asunto": "Masaje", "mensajes": [
+        {"de": "cliente@gmail.com", "texto": "Quiero un masaje"},
+        {"de": "spa@gmail.com", "texto": "¿De cuántos minutos?", "propio": True}]}
+    assert not flujo.hay_que_leer(conversacion, config)
+
+    conversacion["mensajes"].append({"de": "cliente@gmail.com", "texto": "60"})
+    assert flujo.hay_que_leer(conversacion, config)

@@ -78,6 +78,21 @@ def test_un_campo_sin_origen_es_un_error_no_un_campo_vacio(config):
         ficha.armar(HILO, lectura, config)
 
 
+def test_si_no_sabemos_el_nombre_se_le_pregunta_en_vez_de_no_contestar(config):
+    # El cliente que no firma también recibe respuesta: se le saluda sin nombre
+    # y el nombre va con el resto de lo que falta.
+    sin_nombre = copy.deepcopy(LECTURA["cliente"])
+    del sin_nombre["nombre"]
+    textos = config["textos"]["borrador"]["es"]
+
+    resultado = ficha.armar(HILO, lectura_con(cliente=sin_nombre), config)
+
+    cuerpo = resultado["borrador"]["cuerpo"]
+    assert cuerpo.startswith(textos["saludo_sin_nombre"])
+    assert textos["intro"] in cuerpo
+    assert textos["pregunta_nombre"] in cuerpo
+
+
 def test_un_idioma_que_la_casa_no_habla_deja_la_ficha_sin_borrador(config):
     resultado = ficha.armar(HILO, lectura_con(idioma="de"), config)
 

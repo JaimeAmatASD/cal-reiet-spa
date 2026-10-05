@@ -7,6 +7,36 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-06 — Fase 1, paso 6: el sistema contesta solo y pregunta lo que falta
+
+**Qué se hizo.** Cuando a un pedido le falta algún dato, el sistema le contesta al
+cliente desde el buzón del laboratorio y le pregunta todo lo que falta en un solo
+correo. Si el cliente no firmó, le saluda sin nombre y le pregunta a nombre de quién
+va la reserva. Quien escribe «busco hacerme unos tratamientos» cuenta como reserva
+aunque no diga nada más; las consultas sueltas de precio u horario siguen yendo a una
+persona. Nuestra propia respuesta, cuando vuelve a entrar al buzón, no se contesta.
+El reporte semanal sale de la fase.
+
+**Estado.** Probado con un correo de verdad de James: entró, se anotó en la hoja y la
+respuesta salió sola. Los veinte pedidos de prueba siguen en 19 de 20 (el 18, el de
+siempre). Falta probar que, cuando el cliente contesta, se pone al día la misma fila y
+solo se le pregunta lo que sigue faltando.
+
+**Decisiones.** El reporte semanal sale de la fase 1; el sistema contesta solo y
+pregunta el nombre. Ver `decisions.md`.
+
+**Se rompió algo.** No en el sistema. La primera regla para la IA quedó corta y hubo
+que darle ejemplos (ver `lessons.md`).
+
+**Cambio de alcance.** Contestar al cliente era de la fase 2. James lo pidió ahora
+porque es la única forma de probar el recorrido entero.
+
+**Próximo paso.** Que James conteste en la misma conversación con parte de los datos y
+ver la segunda vuelta. Queda pendiente: si el cliente ya dijo el día, la respuesta sale
+con la nota «[COMPLETAR A MANO…]» donde irían los huecos libres.
+
+---
+
 ## 2026-10-05 — Fase 1, paso 6 (parcial): el pedido repetido sale marcado en la hoja
 
 **Qué se hizo.** Antes de abrir una fila nueva, el sistema mira si en la hoja ya hay

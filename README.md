@@ -106,8 +106,9 @@ n8n entra al buzón del laboratorio con un permiso de Google que está montado d
 - El proyecto se llama `cal-reiet-lab`, en la cuenta del laboratorio.
 - La clave está **solo** dentro de n8n, en su almacén cifrado. No está en el
   repositorio y no tiene que estarlo.
-- Por ahora el permiso es **solo de lectura del correo**. Ni enviar, ni borrar, ni
-  modificar: el sistema redacta borradores y no envía.
+- El permiso deja **leer y enviar** correo. Desde el 2026-10-06 el sistema contesta
+  solo al cliente cuando a su pedido le falta algún dato (ver `decisions.md`). Nada
+  más: no borra ni mueve correos.
 
 Si alguna vez hay que rehacerlo, la dirección de retorno es exactamente
 `http://localhost:5678/rest/oauth2-credential/callback`.

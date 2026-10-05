@@ -161,3 +161,21 @@ def test_antes_de_agregar_una_fila_se_mira_si_el_pedido_ya_estaba():
     comandos = [pasos[p]["parameters"].get("command", "") for p in camino]
     assert any(c.endswith("cli.py repetido") for c in comandos), camino
     assert pasos[camino[0]].get("alwaysOutputData") is True, camino[0]
+
+
+def test_al_cliente_se_le_contesta_despues_de_anotar_la_fila():
+    # Primero queda medido, después se contesta: si el correo falla, la fila ya está.
+    datos = json.loads(FLUJO.read_text(encoding="utf-8"))[0]
+    conexiones = datos["connections"]
+    for origen in ("Agregar la fila", "Poner al día la fila"):
+        assert conexiones[origen]["main"][0][0]["node"] == "¿Hay que contestarle?"
+    assert conexiones["¿Hay que contestarle?"]["main"][0][0]["node"] == "Contestar al cliente"
+    contestar = {p["name"]: p for p in datos["nodes"]}["Contestar al cliente"]
+    assert contestar["parameters"]["operation"] == "reply"
+    assert contestar["parameters"]["options"]["appendAttribution"] is False
+
+
+def test_cada_mensaje_sabe_si_lo_escribio_el_spa():
+    # Sin esto, nuestra propia respuesta vuelve a entrar y se contesta sin fin.
+    codigo = {p["name"]: p for p in _pasos()}["Armar el hilo"]["parameters"]["jsCode"]
+    assert 'propio: (m.labelIds || []).includes("SENT")' in codigo

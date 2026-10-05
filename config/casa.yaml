@@ -125,11 +125,13 @@ textos:
     es:
       asunto: "Re: {asunto}"
       saludo: "Hola {nombre},"
+      saludo_sin_nombre: "Hola,"
       intro: >-
         Gracias por escribirnos. Para poder buscarte hueco nos faltan un par
         de datos:
       intro_completo: >-
         Gracias por escribirnos. Lo tenemos todo para buscarte hueco.
+      pregunta_nombre: "¿A nombre de quién hacemos la reserva?"
       pregunta_duracion: "¿Cuánto quieres que dure el masaje?"
       opcion_duracion: "  - {minutos} minutos"
       opcion_duracion_precio: "  - {minutos} minutos - {precio} €"
@@ -156,11 +158,13 @@ textos:
     en:
       asunto: "Re: {asunto}"
       saludo: "Hello {nombre},"
+      saludo_sin_nombre: "Hello,"
       intro: >-
         Thank you for writing to us. To find you a slot we still need a
         couple of details:
       intro_completo: >-
         Thank you for writing to us. We have everything we need to find you a slot.
+      pregunta_nombre: "Whose name should we put the booking under?"
       pregunta_duracion: "How long would you like the massage to be?"
       opcion_duracion: "  - {minutos} minutes"
       opcion_duracion_precio: "  - {minutos} minutes - {precio} €"
