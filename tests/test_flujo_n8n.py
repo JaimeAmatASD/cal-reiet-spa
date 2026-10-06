@@ -88,12 +88,12 @@ def _flujo():
     return datos[0] if isinstance(datos, list) else datos
 
 
-def _armar_el_hilo(entrada: dict) -> dict:
-    """Corre el código de «Armar el hilo» como lo corre n8n, con una sola entrada."""
+def _armar_el_hilo(entrada: dict, *otras: dict) -> dict:
+    """Corre el código de «Armar el hilo» como lo corre n8n: un ítem por mensaje."""
     codigo = {p["name"]: p for p in _pasos()}["Armar el hilo"]["parameters"]["jsCode"]
     programa = (
-        "const $input = { all: () => [{ json: ENTRADA }], first: () => ({ json: ENTRADA }) };\n"
-        "const ENTRADA = " + json.dumps(entrada) + ";\n"
+        "const $input = { all: () => TODAS.map(json => ({ json })), first: () => ({ json: TODAS[0] }) };\n"
+        "const TODAS = " + json.dumps([entrada, *otras]) + ";\n"
         "const salida = (() => {\n" + codigo + "\n})();\n"
         "process.stdout.write(JSON.stringify(salida[0].json));\n"
     )
@@ -177,5 +177,11 @@ def test_al_cliente_se_le_contesta_despues_de_anotar_la_fila():
 
 def test_cada_mensaje_sabe_si_lo_escribio_el_spa():
     # Sin esto, nuestra propia respuesta vuelve a entrar y se contesta sin fin.
-    codigo = {p["name"]: p for p in _pasos()}["Armar el hilo"]["parameters"]["jsCode"]
-    assert 'propio: (m.labelIds || []).includes("SENT")' in codigo
+    # Gmail, en modo completo, dice las etiquetas en «labels», como en el
+    # correo real del 2026-10-06; no en «labelIds».
+    cliente = {"id": "m1", "threadId": "t1", "Subject": "Masaje", "From": "cliente@ejemplo.com",
+               "labels": [{"id": "INBOX", "name": "INBOX"}], "snippet": "Quiero un masaje"}
+    spa = {"id": "m2", "threadId": "t1", "Subject": "Re: Masaje", "From": "spa@ejemplo.com",
+           "labels": [{"id": "SENT", "name": "SENT"}], "snippet": "¿De cuántos minutos?"}
+    mensajes = _armar_el_hilo(cliente, spa)["hilo"]["mensajes"]
+    assert [m["propio"] for m in mensajes] == [False, True]
