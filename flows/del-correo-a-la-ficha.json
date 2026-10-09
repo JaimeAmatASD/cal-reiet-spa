@@ -632,6 +632,63 @@
             "name": "Gmail account"
           }
         }
+      },
+      {
+        "parameters": {
+          "jsCode": "// Solo se anota la primera respuesta: con «entrado_en» da cuánto se tardó en contestar.\n// Si la fila ya tenía hora, se deja como está.\nconst antes = $('¿Ya tiene fila?').first().json.respondido_en;\nif (antes) return [];\n// Hora de esta máquina, igual que «entrado_en» y «leido_en».\nconst d = new Date();\nconst p = n => String(n).padStart(2, '0');\nconst ahora = `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}:${p(d.getSeconds())}`;\nreturn [{ json: { pedido: $('Leer la respuesta').first().json.fila.pedido, respondido_en: ahora } }];"
+        },
+        "id": "9aa33afc-2570-4a2c-a3c7-374d168fa589",
+        "name": "¿Es la primera respuesta?",
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2,
+        "position": [
+          4892,
+          304
+        ]
+      },
+      {
+        "parameters": {
+          "operation": "update",
+          "documentId": {
+            "__rl": true,
+            "value": "1dB6c8zre-h4vsXbWurk-79mBuy9eOIrvdyTzqJJEdo4",
+            "mode": "id"
+          },
+          "sheetName": {
+            "__rl": true,
+            "value": "gid=0",
+            "mode": "list",
+            "cachedResultName": "Hoja 1"
+          },
+          "columns": {
+            "mappingMode": "autoMapInputData",
+            "value": {},
+            "matchingColumns": [
+              "pedido"
+            ],
+            "schema": [],
+            "attemptToConvertTypes": false,
+            "convertFieldsToString": false
+          },
+          "options": {
+            "cellFormat": "RAW",
+            "handlingExtraData": "error"
+          }
+        },
+        "type": "n8n-nodes-base.googleSheets",
+        "typeVersion": 4.7,
+        "position": [
+          5112,
+          304
+        ],
+        "id": "378aceac-a416-4fe5-afd6-a802297ca190",
+        "name": "Anotar la respuesta",
+        "credentials": {
+          "googleSheetsOAuth2Api": {
+            "id": "r7EjmSVcF7BEfI2g",
+            "name": "Google Sheets account"
+          }
+        }
       }
     ],
     "connections": {
@@ -936,6 +993,28 @@
           ],
           []
         ]
+      },
+      "Contestar al cliente": {
+        "main": [
+          [
+            {
+              "node": "¿Es la primera respuesta?",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "¿Es la primera respuesta?": {
+        "main": [
+          [
+            {
+              "node": "Anotar la respuesta",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
       }
     },
     "settings": {
@@ -945,10 +1024,10 @@
     "staticData": {
       "node:Correo nuevo": {
         "Correo nuevo": {
-          "lastTimeChecked": 1791275989,
+          "lastTimeChecked": 1791537507,
           "pendingMessageIds": [],
           "possibleDuplicates": [
-            "1a1105eab54e040b"
+            "1a11ff51a470b5b4"
           ],
           "failedFetches": [
             [

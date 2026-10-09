@@ -47,7 +47,7 @@ El sistema las deja vacías y no las vuelve a tocar.
 
 | Columna | Qué lleva |
 |---|---|
-| `respondido_en` | Cuándo salió la respuesta al cliente. Con `entrado_en` da el número que quiere Petra: cuánto se tarda en contestar |
+| `respondido_en` | Cuándo salió la primera respuesta al cliente. Con `entrado_en` da el número que quiere Petra: cuánto se tarda en contestar. Cuando contesta el sistema, la anota él; si contesta una persona, la anota ella. Una vez puesta, no se pisa |
 | `desenlace` | REALIZADA, CAÍDA, CANCELADA o SIN COBERTURA. Es lo que dice cuántos se pierden |
 | `nota` | Cualquier cosa que haga falta explicar. La única excepción: si el pedido parece repetido, el sistema lo anota acá al crear la fila (ver abajo) |
 

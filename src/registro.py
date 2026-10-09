@@ -42,7 +42,7 @@ COLUMNAS = (
     "motivo",          # por qué se derivó, cuando se derivó
     "estado",          # arranca en SOLICITADA y de ahí lo mueve una persona
     # --- lo que llena una persona ---
-    "respondido_en",   # cuándo salió la respuesta al cliente
+    "respondido_en",   # cuándo salió la primera respuesta; si contesta el sistema, la anota n8n
     "desenlace",       # REALIZADA, CAÍDA, CANCELADA, SIN COBERTURA
     "nota",
 )

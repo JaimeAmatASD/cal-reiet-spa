@@ -4,6 +4,7 @@ Hay errores del flujo que no rompen nada a la vista: n8n da la corrida por buena
 simplemente no sigue. Estas pruebas miran la copia en `flows/` para que no vuelvan.
 """
 import json
+import re
 from pathlib import Path
 
 FLUJO = Path(__file__).parent.parent / "flows" / "del-correo-a-la-ficha.json"
@@ -185,3 +186,45 @@ def test_cada_mensaje_sabe_si_lo_escribio_el_spa():
            "labels": [{"id": "SENT", "name": "SENT"}], "snippet": "¿De cuántos minutos?"}
     mensajes = _armar_el_hilo(cliente, spa)["hilo"]["mensajes"]
     assert [m["propio"] for m in mensajes] == [False, True]
+
+
+def _primera_respuesta(fila_existente: dict) -> list:
+    """Corre el código de «¿Es la primera respuesta?» como lo corre n8n."""
+    codigo = {p["name"]: p for p in _pasos()}["¿Es la primera respuesta?"]["parameters"]["jsCode"]
+    pasos = {
+        "¿Ya tiene fila?": fila_existente,
+        "Leer la respuesta": {"fila": {"pedido": "hilo-1"}},
+    }
+    programa = (
+        "const PASOS = " + json.dumps(pasos) + ";\n"
+        "const $ = nombre => ({ first: () => ({ json: PASOS[nombre] }) });\n"
+        "const salida = (() => {\n" + codigo + "\n})();\n"
+        "process.stdout.write(JSON.stringify(salida.map(i => i.json)));\n"
+    )
+    hecho = subprocess.run([shutil.which("node"), "-e", programa],
+                           capture_output=True, text=True, check=True)
+    return json.loads(hecho.stdout)
+
+
+def test_despues_de_contestar_se_anota_la_hora_en_la_fila():
+    # Con «entrado_en» da cuánto se tarda en contestar, que es lo que quiere Petra.
+    datos = _flujo()
+    conexiones = datos["connections"]
+    assert conexiones["Contestar al cliente"]["main"][0][0]["node"] == "¿Es la primera respuesta?"
+    assert conexiones["¿Es la primera respuesta?"]["main"][0][0]["node"] == "Anotar la respuesta"
+    anotar = {p["name"]: p for p in datos["nodes"]}["Anotar la respuesta"]
+    assert anotar["parameters"]["operation"] == "update"
+    assert anotar["parameters"]["columns"]["matchingColumns"] == ["pedido"]
+
+
+def test_la_primera_respuesta_deja_la_hora_en_la_fila():
+    salida = _primera_respuesta({})  # fila nueva: el pedido no estaba
+    assert len(salida) == 1
+    assert salida[0]["pedido"] == "hilo-1"
+    assert re.fullmatch(r"\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d", salida[0]["respondido_en"])
+
+
+def test_si_ya_se_le_habia_contestado_la_hora_no_se_pisa():
+    # Lo que se mide es cuánto tardó la primera respuesta, no la última.
+    salida = _primera_respuesta({"pedido": "hilo-1", "respondido_en": "2026-10-09T11:14:25"})
+    assert salida == []

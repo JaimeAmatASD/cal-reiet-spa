@@ -7,6 +7,28 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-09 — Fase 1, paso 6 (parcial): queda anotado cuánto se tarda en contestar
+
+**Qué se hizo.** Cuando el sistema le contesta al cliente, anota la hora en la hoja,
+en la columna de cuándo se le contestó. Solo la primera vez: si ya había una hora, de
+una persona o de una vuelta anterior, no se toca. Con la hora de entrada da el número
+que pide Petra.
+
+**Estado.** Probado con un correo de verdad de James (asunto `NUEVO:Juan23`): entró a
+las 11:42:24 y la respuesta quedó anotada a las 11:42:52, en hora de acá. En la misma
+prueba se vio funcionar la pregunta nueva del nombre y el atajo `NUEVO:`.
+
+**Decisiones.** Se anota la primera respuesta, no la última.
+
+**Se rompió algo.** No. Se vio otra cosa: un aviso publicitario (Loom, de Atlassian)
+llegó al buzón del laboratorio y entró a la hoja como fila a derivar. El filtro de
+remitentes automáticos solo deja afuera a Google.
+
+**Próximo paso.** Decidir si los avisos automáticos de otras empresas se dejan afuera
+y cómo.
+
+---
+
 ## 2026-10-09 — Fase 1, paso 6 (parcial): la segunda vuelta con el cliente
 
 **Qué se hizo.** James escribió un pedido al laboratorio («un masaje el 18 de
