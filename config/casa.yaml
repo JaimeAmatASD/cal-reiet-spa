@@ -58,6 +58,7 @@ aviso_sin_pago_horas: 12
 
 remitentes_automaticos:
   - google.com
+  - atlassian.net
 
 # --- Salas ------------------------------------------------------------------
 # Una sala = un calendario de Google. El id de cada calendario va en .env,
