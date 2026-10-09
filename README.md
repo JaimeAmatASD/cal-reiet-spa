@@ -5,8 +5,8 @@ de Cal Reiet.
 
 ## Estado
 
-Fase 1 — medir sin tocar nada. Entorno de laboratorio, sin contacto con la operación
-real del hotel.
+Fase 1 cerrada el 2026-10-09. Sigue la fase 4, el buscador de huecos. Entorno de
+laboratorio, sin contacto con la operación real del hotel.
 
 ## Cómo correrlo
 

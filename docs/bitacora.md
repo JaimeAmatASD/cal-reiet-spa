@@ -7,6 +7,31 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-09 — Fase 1 cerrada
+
+**Qué se hizo.** El sistema lee el buzón del laboratorio, entiende cada pedido, lo
+anota en la hoja y le pregunta al cliente lo que falta, en un solo correo. Cuando el
+cliente contesta, pone al día la misma fila. Marca los pedidos que parecen repetidos,
+deja afuera los avisos automáticos y anota cuánto se tardó en contestar.
+
+**Estado.** Cerrada por decisión de James, para seguir con la lógica. De los veinte
+pedidos de prueba acierta 19. Queda abierto, para más adelante:
+- Diecinueve de los veinte pedidos son inventados; falta medir con reales
+  anonimizados.
+- El pedido 18 (el que reenvía recepción) hace una pregunta de más.
+- La respuesta dice «un par de datos» aunque falte uno solo.
+- Los avisos de otras empresas se van agregando a mano a la lista de remitentes
+  automáticos.
+- El reporte semanal salió de esta fase (ver `decisions.md`).
+
+**Cambio de alcance.** Se adelantó de la fase 2 la respuesta automática al cliente,
+para poder probar el recorrido entero.
+
+**Próximo paso.** Fase 4, buscador de huecos, en un chat nuevo: que la respuesta
+proponga las horas libres en vez del «[COMPLETAR A MANO…]».
+
+---
+
 ## 2026-10-09 — Fase 1, paso 6 (parcial): queda anotado cuánto se tarda en contestar
 
 **Qué se hizo.** Cuando el sistema le contesta al cliente, anota la hora en la hoja,
