@@ -98,3 +98,42 @@ def test_un_idioma_que_la_casa_no_habla_deja_la_ficha_sin_borrador(config):
 
     assert resultado["salida"] == "completo"
     assert resultado["borrador"] is None
+
+
+# --- NUEVO:{nombre} en el asunto -------------------------------------------
+# Atajo del laboratorio: desde un mismo buzón se simulan clientes distintos
+# poniendo en el asunto quién escribe, sin tener que cambiar de correo. Hace de
+# correo del cliente, no de nombre: el nombre se le sigue preguntando.
+
+def sin_nombre_leido():
+    cliente = copy.deepcopy(LECTURA["cliente"])
+    del cliente["nombre"]
+    return lectura_con(cliente=cliente)
+
+
+@pytest.mark.parametrize("asunto", ["NUEVO:Juan23", "NUEVO: Juan23", "Re: NUEVO:Juan23"])
+def test_nuevo_en_el_asunto_hace_de_correo_del_cliente(config, asunto):
+    hilo = {**HILO, "asunto": asunto}
+
+    resultado = ficha.armar(hilo, lectura_con(), config)
+
+    assert resultado["cliente"]["correo"] == {"valor": "juan23@ejemplo.com", "origen": "dicho"}
+
+
+def test_nuevo_en_el_asunto_no_da_el_nombre_y_se_sigue_preguntando(config):
+    hilo = {**HILO, "asunto": "NUEVO:Juan23"}
+
+    resultado = ficha.armar(hilo, sin_nombre_leido(), config)
+
+    assert resultado["cliente"]["nombre"]["valor"] is None
+    textos = config["textos"]["borrador"]["es"]
+    assert textos["pregunta_nombre"] in resultado["borrador"]["cuerpo"]
+
+
+@pytest.mark.parametrize("asunto", ["Masaje", "NUEVO:", "Quiero algo NUEVO:Juan23"])
+def test_sin_nuevo_al_principio_del_asunto_el_correo_no_cambia(config, asunto):
+    hilo = {**HILO, "asunto": asunto}
+
+    resultado = ficha.armar(hilo, lectura_con(), config)
+
+    assert resultado["cliente"]["correo"]["valor"] == "a.molins@ejemplo.com"

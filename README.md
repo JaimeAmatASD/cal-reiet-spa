@@ -120,6 +120,11 @@ cuentas del hotel. Los datos de clientes se anonimizan antes de entrar.
 
 Copiá `.env.example` a `.env` y completá los valores. `.env` nunca se commitea.
 
+Para probar como si escribieran clientes distintos desde un mismo correo, el asunto
+empieza con `NUEVO:` y un nombre corto: `NUEVO:Juan23` hace que el pedido figure
+como escrito desde `juan23@ejemplo.com`. Es solo para pruebas: el nombre se le
+sigue preguntando, y la respuesta llega al correo de verdad.
+
 ## Documentación
 
 - `docs/bitacora.md` — qué se hizo y cuándo

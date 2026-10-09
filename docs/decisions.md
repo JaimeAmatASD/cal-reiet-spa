@@ -5,6 +5,18 @@ se podía ir para dos lados y se eligió uno.
 
 ---
 
+## 2026-10-09 — «A mi nombre» no da el nombre: se sigue preguntando, mejor
+
+**Contexto**: en la segunda vuelta James contestó «estará a nombre mío», sin firma, y
+el sistema le volvió a preguntar a nombre de quién era la reserva. Parece que no se
+lo leyó.
+**Alternativas**: tomar el nombre que aparece como remitente del correo.
+**Elegido** (James): seguir preguntando, con una pregunta que deja claro qué falta:
+«¿Nos dices el nombre y apellido para la reserva?». Dice «el» y no «tu», porque
+también puede ser un regalo para otra persona.
+**Costo aceptado**: el cliente que contesta «a mi nombre» recibe una pregunta más.
+**Se revisa si**: los clientes de verdad se quejan de que se les pregunte dos veces.
+
 ## 2026-10-06 — El sistema contesta solo y pregunta lo que falta, nombre incluido
 
 **Contexto**: para probar el recorrido entero hace falta que el cliente reciba

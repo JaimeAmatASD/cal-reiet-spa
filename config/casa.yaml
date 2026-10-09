@@ -131,7 +131,7 @@ textos:
         de datos:
       intro_completo: >-
         Gracias por escribirnos. Lo tenemos todo para buscarte hueco.
-      pregunta_nombre: "¿A nombre de quién hacemos la reserva?"
+      pregunta_nombre: "¿Nos dices el nombre y apellido para la reserva?"
       pregunta_duracion: "¿Cuánto quieres que dure el masaje?"
       opcion_duracion: "  - {minutos} minutos"
       opcion_duracion_precio: "  - {minutos} minutos - {precio} €"
@@ -164,7 +164,7 @@ textos:
         couple of details:
       intro_completo: >-
         Thank you for writing to us. We have everything we need to find you a slot.
-      pregunta_nombre: "Whose name should we put the booking under?"
+      pregunta_nombre: "Could you tell us the first and last name for the booking?"
       pregunta_duracion: "How long would you like the massage to be?"
       opcion_duracion: "  - {minutos} minutes"
       opcion_duracion_precio: "  - {minutos} minutes - {precio} €"

@@ -17,6 +17,7 @@ Si el motivo es salud, la ficha sale vacía: número de hilo y nada más. El tex
 del correo no se copia a ningún lado. Son datos de categoría especial y el sitio
 donde tienen que quedarse es el buzón, no nuestros registros.
 """
+import re
 from datetime import datetime
 
 import borrador
@@ -41,6 +42,9 @@ def armar(hilo: dict, lectura: dict, config: dict, ahora: datetime | None = None
         }
 
     cliente, peticion = extraer(lectura, config)
+    correo_del_asunto = _correo_del_asunto(hilo["asunto"])
+    if correo_del_asunto:
+        cliente["correo"] = {"valor": correo_del_asunto, "origen": "dicho"}
     falta = [c for c in CAMPOS_PETICION if peticion[c]["valor"] is None]
     a_confirmar = [c for c in CAMPOS_PETICION
                    if peticion[c]["valor"] is not None and peticion[c]["origen"] == "deducido"]
@@ -65,6 +69,18 @@ def armar(hilo: dict, lectura: dict, config: dict, ahora: datetime | None = None
         ficha["borrador"] = borrador.redactar(ficha, config, hilo["asunto"])
 
     return ficha
+
+
+# Atajo del laboratorio: un asunto «NUEVO:Juan23» hace que el cliente escriba
+# desde juan23@ejemplo.com. Así se simulan clientes distintos desde un mismo
+# buzón. El nombre no lo da: se le sigue preguntando. La respuesta sale igual
+# al correo de verdad, porque se contesta dentro de la conversación.
+_NUEVO = re.compile(r"^(?:(?:re|fwd?):\s*)*NUEVO:\s*(\S+)\s*$", re.IGNORECASE)
+
+
+def _correo_del_asunto(asunto: str) -> str | None:
+    encontrado = _NUEVO.match(asunto or "")
+    return f"{encontrado.group(1).lower()}@ejemplo.com" if encontrado else None
 
 
 def _salida(intencion: str, falta: list, a_confirmar: list) -> str:

@@ -7,6 +7,55 @@ recordar qué pasó, no para revisar código.
 
 ---
 
+## 2026-10-09 — Fase 1, paso 6 (parcial): la segunda vuelta con el cliente
+
+**Qué se hizo.** James escribió un pedido al laboratorio («un masaje el 18 de
+noviembre») y después contestó en la misma conversación con la duración, la franja y
+«a nombre mío». El sistema puso al día la misma fila de la hoja, reconoció su propia
+respuesta dentro de la conversación y volvió a preguntar solo lo que faltaba. La
+pregunta del nombre ahora es más clara: «¿Nos dices el nombre y apellido para la
+reserva?». Para las pruebas, un asunto que empieza con `NUEVO:Juan23` hace de
+cliente distinto (ver README).
+
+**Estado.** La segunda vuelta funciona. No se probó todavía con un correo de verdad
+el texto nuevo del nombre ni el atajo `NUEVO:`; las pruebas automáticas sí pasan.
+
+**Decisiones.** Si el cliente dice «a mi nombre» sin firmar, el nombre se le sigue
+preguntando, mejor formulado. No se toma del remitente, porque ahí suele haber
+apodos o nombres de empresa. Ver `decisions.md`.
+
+**Se rompió algo.** No.
+
+**Queda anotado.**
+- La respuesta dice «nos faltan un par de datos» aunque falte uno solo.
+- La columna de cuándo se le contestó al cliente queda vacía ahora que contesta el
+  sistema, y es el número de tiempo de respuesta que quiere Petra.
+
+**Próximo paso.** Decidir qué hacer con la columna de cuándo se le contestó al
+cliente.
+
+---
+
+## 2026-10-06 — Fase 1, paso 6 (parcial): el sistema reconoce sus propias respuestas
+
+**Qué se hizo.** Dentro de una conversación, el sistema no distinguía los correos que
+manda el spa de los que escribe el cliente: todos le parecían del cliente. La
+protección para no contestarse a sí mismo estaba escrita pero no funcionaba. Ahora
+reconoce lo que salió del buzón del spa.
+
+**Estado.** Arreglado y con prueba hecha sobre la forma que tenía el correo real de
+ese día. Falta verlo funcionar en la segunda vuelta, cuando el cliente contesta.
+
+**Decisiones.** Ninguna.
+
+**Se rompió algo.** Sí, en `lessons.md`: la prueba anterior miraba que el código
+estuviera escrito, no lo hacía andar con un correo de verdad.
+
+**Próximo paso.** Que James conteste en la misma conversación con parte de los datos y
+ver la segunda vuelta.
+
+---
+
 ## 2026-10-06 — Fase 1, paso 6: el sistema contesta solo y pregunta lo que falta
 
 **Qué se hizo.** Cuando a un pedido le falta algún dato, el sistema le contesta al
